@@ -1,3 +1,5 @@
+import { randomBytes } from "node:crypto";
+
 import { google } from "googleapis";
 
 import {
@@ -70,13 +72,13 @@ async function ensureTab(tab: SheetTab) {
       requestBody: { values: [[...tab.headers]] },
     });
   }
-  return { sheets, spreadsheetId };
+  return { sheets, spreadsheetId, wasCreated: !exists };
 }
 
 async function readRows(tab: SheetTab) {
-  const { sheets, spreadsheetId } = await ensureTab(tab);
+  const { sheets, spreadsheetId, wasCreated } = await ensureTab(tab);
   const response = await sheets.spreadsheets.values.get({ spreadsheetId, range: `${tab.title}!A2:Z` });
-  return response.data.values ?? [];
+  return { rows: response.data.values ?? [], wasCreated };
 }
 
 async function appendRow(tab: SheetTab, row: string[]) {
@@ -100,8 +102,16 @@ async function overwriteRow(tab: SheetTab, row: number, values: string[]) {
   });
 }
 
+async function clearRow(tab: SheetTab, row: number) {
+  const { sheets, spreadsheetId } = await ensureTab(tab);
+  await sheets.spreadsheets.values.clear({
+    spreadsheetId,
+    range: `${tab.title}!A${row}:Z${row}`,
+  });
+}
+
 export async function listTickets() {
-  const rows = await readRows(TABS.tickets);
+  const { rows } = await readRows(TABS.tickets);
   return rows
     .map((row) => ticketRecordSchema.safeParse(parseJson(row[1])))
     .flatMap((result) => result.success ? [result.data] : [])
@@ -113,12 +123,20 @@ export async function getTicket(ticketId: string) {
   return rows.find((row) => row.value.id === ticketId)?.value;
 }
 
+export async function getTicketByTrackingToken(trackingToken: string) {
+  const rows = await readTicketRows();
+  return rows.find((row) => row.value.trackingToken === trackingToken)?.value;
+}
+
 export async function createStoredTicket(request: RequestInput) {
   const tickets = await listTickets();
   const now = new Date();
   const datePrefix = now.toISOString().slice(0, 10).replaceAll("-", "");
   const sequence = tickets.filter((ticket) => ticket.id.startsWith(`IRH-${datePrefix}`)).length + 1;
-  const ticket = createTicket(request, now, sequence);
+  const ticket = ticketRecordSchema.parse({
+    ...createTicket(request, now, sequence),
+    trackingToken: randomBytes(24).toString("base64url"),
+  });
   await appendRow(TABS.tickets, [ticket.id, JSON.stringify(ticket)]);
   return ticket;
 }
@@ -135,8 +153,8 @@ export async function updateStoredTicket(ticketId: string, changes: TicketChange
 }
 
 export async function listSystems(includeInactive = false) {
-  const rows = await readSystemRows();
-  if (!rows.length) {
+  const { rows, wasCreated } = await readSystemRows();
+  if (!rows.length && wasCreated) {
     const defaults = ["CRM", "POS Outlet", "HRIS"];
     const now = new Date();
     const created = defaults.map((name, index) => createSystem({ name }, new Date(now.getTime() + index)));
@@ -154,13 +172,21 @@ export async function createManagedSystem(input: unknown) {
 
 export async function updateManagedSystem(systemId: string, input: unknown) {
   const patch = systemInputSchema.partial().extend({ active: systemRecordSchema.shape.active.optional() }).refine((value) => Object.keys(value).length > 0, "Pilih perubahan sistem.").parse(input);
-  const rows = await readSystemRows();
+  const { rows } = await readSystemRows();
   const current = rows.find((row) => row.value.id === systemId);
   if (!current) throw new Error("Sistem tidak ditemukan.");
 
   const system = systemRecordSchema.parse({ ...current.value, ...patch, updatedAt: new Date().toISOString() });
   await overwriteRow(TABS.systems, current.row, systemToRow(system));
   return system;
+}
+
+export async function deleteManagedSystem(systemId: string) {
+  const { rows } = await readSystemRows();
+  const current = rows.find((row) => row.value.id === systemId);
+  if (!current) throw new Error("Sistem tidak ditemukan.");
+
+  await clearRow(TABS.systems, current.row);
 }
 
 export async function listEngineerUsers(): Promise<PublicEngineerUser[]> {
@@ -215,20 +241,31 @@ export async function updateEngineerUser(userId: string, input: unknown) {
   return sanitizeUser(candidate);
 }
 
+export async function deleteEngineerUser(userId: string) {
+  const users = await ensureInitialAdmin();
+  const current = users.find((user) => user.value.id === userId);
+  if (!current) throw new Error("User engineer tidak ditemukan.");
+
+  const remainingActiveAdmins = users.filter((user) => user.value.id !== userId && user.value.active && user.value.role === "admin");
+  if (!remainingActiveAdmins.length) throw new Error("Setidaknya satu admin aktif wajib tersedia.");
+
+  await clearRow(TABS.users, current.row);
+}
+
 async function readTicketRows(): Promise<RowWithIndex<Ticket>[]> {
-  const rows = await readRows(TABS.tickets);
+  const { rows } = await readRows(TABS.tickets);
   return rows.flatMap((row, index) => {
     const result = ticketRecordSchema.safeParse(parseJson(row[1]));
     return result.success ? [{ value: result.data, row: index + 2 }] : [];
   });
 }
 
-async function readSystemRows(): Promise<RowWithIndex<ManagedSystem>[]> {
-  const rows = await readRows(TABS.systems);
-  return rows.flatMap((row, index) => {
+async function readSystemRows(): Promise<{ rows: RowWithIndex<ManagedSystem>[]; wasCreated: boolean }> {
+  const { rows, wasCreated } = await readRows(TABS.systems);
+  return { wasCreated, rows: rows.flatMap((row, index) => {
     const result = systemRecordSchema.safeParse({ id: row[0], name: row[1], active: row[2] === "true", createdAt: row[3], updatedAt: row[4] });
     return result.success ? [{ value: result.data, row: index + 2 }] : [];
-  });
+  }) };
 }
 
 async function ensureInitialAdmin(): Promise<RowWithIndex<EngineerUser>[]> {
@@ -251,7 +288,7 @@ async function ensureInitialAdmin(): Promise<RowWithIndex<EngineerUser>[]> {
 }
 
 async function readUserRows(): Promise<RowWithIndex<EngineerUser>[]> {
-  const rows = await readRows(TABS.users);
+  const { rows } = await readRows(TABS.users);
   return rows.flatMap((row, index) => {
     const result = userRecordSchema.safeParse({
       id: row[0], username: row[1], name: row[2], role: row[3], active: row[4] === "true", passwordHash: row[5], createdAt: row[6], updatedAt: row[7],

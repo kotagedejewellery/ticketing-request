@@ -127,6 +127,7 @@ describe("getPublicTicket", () => {
       new Date("2026-09-25T08:00:00.000Z"),
     );
     ticket.technicalClassification = "Koneksi API pembayaran";
+    ticket.trackingToken = "tracking-token-yang-tidak-boleh-terlihat";
 
     expect(getPublicTicket(ticket)).toEqual({
       id: ticket.id,
@@ -136,6 +137,7 @@ describe("getPublicTicket", () => {
       publicProgress: ticket.publicProgress,
       updatedAt: ticket.updatedAt,
     });
+    expect(getPublicTicket(ticket)).not.toHaveProperty("trackingToken");
   });
 });
 

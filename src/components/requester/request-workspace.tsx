@@ -1,21 +1,20 @@
 "use client";
 
 import { CheckCircle2Icon, ClipboardCheckIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 import { RequestForm } from "@/components/requester/request-form";
 import { RequestTypePicker } from "@/components/requester/request-type-picker";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RequestInput, Ticket } from "@/lib/domain/tickets";
 
-type RequestWorkspaceProps = {
-  onTrackTicket: (ticketId: string) => void;
-};
+type CreatedTicket = Ticket & { trackingToken: string };
 
-export function RequestWorkspace({ onTrackTicket }: RequestWorkspaceProps) {
+export function RequestWorkspace() {
   const [selectedType, setSelectedType] = useState<RequestInput["type"]>();
-  const [createdTicket, setCreatedTicket] = useState<Ticket>();
+  const [createdTicket, setCreatedTicket] = useState<CreatedTicket>();
 
   const submitRequest = async (request: RequestInput) => {
     const response = await fetch("/api/tickets", {
@@ -23,8 +22,8 @@ export function RequestWorkspace({ onTrackTicket }: RequestWorkspaceProps) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(request),
     });
-    const payload = await response.json().catch(() => undefined) as { ticket?: Ticket; message?: string } | undefined;
-    if (!response.ok || !payload?.ticket) throw new Error(payload?.message ?? "Request belum dapat dikirim. Silakan coba lagi.");
+    const payload = await response.json().catch(() => undefined) as { ticket?: CreatedTicket; message?: string } | undefined;
+    if (!response.ok || !payload?.ticket?.trackingToken) throw new Error(payload?.message ?? "Request belum dapat dikirim. Silakan coba lagi.");
     setCreatedTicket(payload.ticket);
   };
 
@@ -42,15 +41,15 @@ export function RequestWorkspace({ onTrackTicket }: RequestWorkspaceProps) {
             </div>
           </CardHeader>
           <CardContent className="pt-6">
-            <p className="text-muted-foreground">Simpan nomor tiket ini untuk melihat pembaruan progres Anda.</p>
+            <p className="text-muted-foreground">Gunakan tautan pelacakan untuk melihat pembaruan progres request Anda.</p>
             <div className="mt-5 flex items-center gap-3 rounded-xl bg-muted p-4">
               <ClipboardCheckIcon aria-hidden="true" className="size-5 shrink-0" />
               <code className="font-mono text-lg font-semibold tracking-wide">{createdTicket.id}</code>
             </div>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" className="h-12 w-full sm:w-auto" onClick={() => onTrackTicket(createdTicket.id)}>
+              <Link href={`/lacak/${createdTicket.trackingToken}`} className={buttonVariants({ size: "lg", className: "h-12 w-full sm:w-auto" })}>
                 Lacak tiket ini
-              </Button>
+              </Link>
               <Button variant="outline" size="lg" className="h-12 w-full sm:w-auto" onClick={() => { setCreatedTicket(undefined); setSelectedType(undefined); }}>
                 <PlusIcon aria-hidden="true" /> Buat request lain
               </Button>

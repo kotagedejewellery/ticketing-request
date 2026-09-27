@@ -4,7 +4,7 @@ import { FilterIcon, FolderOpenIcon, ListFilterIcon, RefreshCwIcon } from "lucid
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AdminManagement } from "@/components/admin/admin-management";
-import type { EngineerSession } from "@/components/auth/login-dialog";
+import type { EngineerSession } from "@/components/auth/engineer-login-form";
 import { TicketDetailDialog } from "@/components/admin/ticket-detail-dialog";
 import { TicketStatusBadge } from "@/components/shared/ticket-status-badge";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,7 @@ export function Dashboard({ user }: { user: EngineerSession }) {
     <section aria-labelledby="dashboard-title" className="w-full">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div><h1 id="dashboard-title" className="text-balance text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Request untuk ditindaklanjuti.</h1><p className="mt-2 text-sm text-muted-foreground">Masuk sebagai {user.name} · {user.role === "admin" ? "Admin" : "Engineer"}</p></div>
-        <Button type="button" variant="outline" className="h-11" onClick={() => void loadTickets()} disabled={isLoading}><RefreshCwIcon aria-hidden="true" className={isLoading ? "animate-spin" : undefined} /> Muat ulang</Button>
+        <Button type="button" variant="outline" className="h-11" onClick={() => void loadTickets()} disabled={isLoading} aria-busy={isLoading}><RefreshCwIcon aria-hidden="true" className={isLoading ? "animate-spin" : undefined} /> {isLoading ? "Memuat..." : "Muat ulang"}</Button>
       </div>
 
       <div className="mt-7 grid gap-3 border-y border-border py-4 sm:grid-cols-3 sm:py-5">

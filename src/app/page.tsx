@@ -1,5 +1,5 @@
-import { InternalRequestHub } from "@/components/app/internal-request-hub";
+import { RequesterHub } from "@/components/requester/requester-hub";
 
 export default function Home() {
-  return <InternalRequestHub />;
+  return <RequesterHub />;
 }

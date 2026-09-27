@@ -7,7 +7,9 @@ export const SESSION_COOKIE = "irh_engineer_session";
 
 export async function getSessionUser() {
   const cookieStore = await cookies();
-  return readSessionToken(cookieStore.get(SESSION_COOKIE)?.value, getAuthSecret());
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  if (!token) return undefined;
+  return readSessionToken(token, getAuthSecret());
 }
 
 export async function getActiveSessionUser(): Promise<SessionUser | undefined> {

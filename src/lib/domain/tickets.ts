@@ -73,8 +73,10 @@ export const requestSchema = z.discriminatedUnion("type", [
 
 export type RequestInput = z.infer<typeof requestSchema>;
 export type TicketStatus = (typeof TICKET_STATUSES)[number];
+export const trackingTokenSchema = z.string().min(24).max(128);
 const ticketMetadataSchema = z.object({
   id: z.string().min(1),
+  trackingToken: trackingTokenSchema.optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   status: z.enum(TICKET_STATUSES),
@@ -89,6 +91,7 @@ export const ticketRecordSchema = z.discriminatedUnion("type", [
 ]);
 
 export type Ticket = z.infer<typeof ticketRecordSchema>;
+export type PublicTicket = Pick<Ticket, "id" | "type" | "status" | "publicProgress" | "updatedAt"> & { title: string };
 
 export const ticketChangesSchema = z.object({
   status: z.enum(TICKET_STATUSES),
@@ -147,7 +150,7 @@ export function getTicketSummary(ticket: Ticket) {
   return ticket.incident;
 }
 
-export function getPublicTicket(ticket: Ticket) {
+export function getPublicTicket(ticket: Ticket): PublicTicket {
   return {
     id: ticket.id,
     type: ticket.type,

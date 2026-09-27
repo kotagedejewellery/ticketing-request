@@ -1,37 +1,31 @@
 "use client";
 
-import { CalendarClockIcon, SearchIcon, ShieldCheckIcon } from "lucide-react";
+import { CalendarClockIcon, LoaderCircleIcon, ShieldCheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { TicketStatusBadge } from "@/components/shared/ticket-status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { REQUEST_TYPE_LABELS, type Ticket } from "@/lib/domain/tickets";
-
-type PublicTicket = Pick<Ticket, "id" | "type" | "status" | "publicProgress" | "updatedAt"> & { title: string };
+import { REQUEST_TYPE_LABELS, type PublicTicket } from "@/lib/domain/tickets";
 
 type TrackingPanelProps = {
-  initialTicketId?: string;
+  trackingToken: string;
 };
 
-export function TrackingPanel({ initialTicketId = "" }: TrackingPanelProps) {
-  const [query, setQuery] = useState(initialTicketId);
+export function TrackingPanel({ trackingToken }: TrackingPanelProps) {
   const [ticket, setTicket] = useState<PublicTicket>();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const search = async (ticketId: string) => {
-    const normalizedId = ticketId.trim();
-    if (!normalizedId) return;
+  const loadTicket = async () => {
     setIsLoading(true);
     setMessage("");
     setTicket(undefined);
     try {
-      const response = await fetch(`/api/tickets/${encodeURIComponent(normalizedId)}`);
+      const response = await fetch(`/api/tracking/${encodeURIComponent(trackingToken)}`);
       const payload = await response.json().catch(() => undefined) as { ticket?: PublicTicket; message?: string } | undefined;
       if (!response.ok || !payload?.ticket) {
-        setMessage(payload?.message ?? "Tiket tidak ditemukan. Periksa kembali nomor tiket Anda.");
+        setMessage(payload?.message ?? "Tiket tidak ditemukan atau tautan sudah tidak berlaku.");
         return;
       }
       setTicket(payload.ticket);
@@ -43,24 +37,20 @@ export function TrackingPanel({ initialTicketId = "" }: TrackingPanelProps) {
   };
 
   useEffect(() => {
-    if (initialTicketId) void search(initialTicketId);
-  }, [initialTicketId]);
+    void loadTicket();
+  }, [trackingToken]);
 
   return (
     <section aria-labelledby="tracking-title" className="mx-auto w-full max-w-3xl">
       <div className="max-w-2xl">
-        <h1 id="tracking-title" className="text-balance text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Lacak progres request Anda.</h1>
-        <p className="mt-3 leading-7 text-muted-foreground">Masukkan nomor tiket yang Anda terima setelah mengirim request.</p>
+        <h1 id="tracking-title" className="text-balance text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Progres request Anda.</h1>
+        <p className="mt-3 leading-7 text-muted-foreground">Berikut pembaruan terbaru dari tim engineer untuk request Anda.</p>
       </div>
 
-      <form onSubmit={(event) => { event.preventDefault(); void search(query); }} className="mt-7 flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 sm:flex-row sm:p-5">
-        <label className="sr-only" htmlFor="ticket-id">Nomor tiket</label>
-        <Input id="ticket-id" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Contoh: IRH-20260925-007" className="h-12 rounded-xl font-mono text-base" />
-        <Button type="submit" size="lg" className="h-12 w-full sm:min-w-32 sm:w-auto" disabled={isLoading}><SearchIcon aria-hidden="true" /> {isLoading ? "Mencari..." : "Cari tiket"}</Button>
-      </form>
-
+      {isLoading ? <p role="status" className="mt-7 flex items-center gap-2 text-sm text-muted-foreground"><LoaderCircleIcon aria-hidden="true" className="size-4 animate-spin" /> Memuat progres request...</p> : null}
       {message ? <div role="status" className="mt-5 rounded-lg border border-destructive/25 bg-destructive/5 p-4 text-sm text-destructive">{message}</div> : null}
       {ticket ? <TicketProgress ticket={ticket} /> : null}
+      {message && !isLoading ? <Button type="button" variant="outline" className="mt-4 h-11" onClick={() => void loadTicket()}>Coba lagi</Button> : null}
     </section>
   );
 }
