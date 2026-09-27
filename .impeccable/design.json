@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-26T00:00:00Z",
+  "title": "Design System: Internal Request Hub",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Cool Paper", "canonical": "oklch(0.975 0.006 250)", "tonalRamp": ["oklch(0.18 0.01 250)", "oklch(0.3 0.01 250)", "oklch(0.42 0.01 250)", "oklch(0.54 0.008 250)", "oklch(0.66 0.008 250)", "oklch(0.78 0.007 250)", "oklch(0.9 0.006 250)", "oklch(0.975 0.006 250)"] },
+      "navy": { "role": "primary", "displayName": "Ledger Navy", "canonical": "oklch(0.28 0.055 258)", "tonalRamp": ["oklch(0.16 0.04 258)", "oklch(0.24 0.05 258)", "oklch(0.32 0.06 258)", "oklch(0.4 0.07 258)", "oklch(0.5 0.08 258)", "oklch(0.6 0.09 258)", "oklch(0.72 0.07 258)", "oklch(0.9 0.03 258)"] },
+      "cobalt": { "role": "secondary", "displayName": "Quiet Cobalt", "canonical": "oklch(0.64 0.15 250)", "tonalRamp": ["oklch(0.2 0.07 250)", "oklch(0.3 0.1 250)", "oklch(0.4 0.13 250)", "oklch(0.5 0.15 250)", "oklch(0.64 0.15 250)", "oklch(0.74 0.12 250)", "oklch(0.84 0.08 250)", "oklch(0.94 0.03 250)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Task Display", "purpose": "Page-level task statements and key flow headings." },
+      "body": { "displayName": "Operational Body", "purpose": "Instructions, request context, and progress copy." },
+      "label": { "displayName": "Visible Label", "purpose": "Form labels and compact navigation copy." }
+    },
+    "shadows": [
+      { "name": "resolved-ambient", "value": "0 16px 36px oklch(0.28 0.055 258 / 0.08)", "purpose": "Completion and tracking surfaces only." }
+    ],
+    "motion": [
+      { "name": "state-standard", "value": "200ms ease-out", "purpose": "Selection, hover, and focus feedback with an already-visible default state." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    { "name": "Primary Button", "kind": "button", "refersTo": "button-primary", "description": "The primary action for submission, tracking, and saving.", "html": "<button class=\"ds-btn-primary\">Kirim request</button>", "css": ".ds-btn-primary{min-height:48px;padding:0 20px;border:0;border-radius:12px;background:oklch(0.28 0.055 258);color:oklch(0.985 0.004 250);font:600 14px ui-sans-serif,system-ui,sans-serif;transition:background-color 200ms ease-out,transform 200ms ease-out}.ds-btn-primary:hover{background:oklch(0.35 0.055 258)}.ds-btn-primary:focus-visible{outline:3px solid oklch(0.64 0.15 250 / .45);outline-offset:2px}.ds-btn-primary:active{transform:translateY(1px)}" },
+    { "name": "Field Input", "kind": "input", "refersTo": "field-input", "description": "Visible-label text entry with phone-ready target size.", "html": "<label class=\"ds-field\">Nama<input placeholder=\"Nama lengkap\"></label>", "css": ".ds-field{display:grid;gap:10px;color:oklch(0.22 0.025 255);font:500 14px ui-sans-serif,system-ui,sans-serif}.ds-field input{min-height:48px;border:1px solid oklch(0.8 0.02 250);border-radius:12px;background:oklch(0.975 0.006 250);padding:0 12px;color:inherit;font:400 16px ui-sans-serif,system-ui,sans-serif}.ds-field input:focus-visible{outline:3px solid oklch(0.64 0.15 250 / .35);outline-offset:1px}" },
+    { "name": "Segmented Navigation", "kind": "nav", "refersTo": "navigation-active", "description": "Compact two-view requester navigation that remains legible on phone widths; the authenticated dashboard is outside this navigation.", "html": "<nav class=\"ds-nav\"><button class=\"is-active\">Request</button><button>Lacak</button></nav>", "css": ".ds-nav{display:grid;grid-template-columns:repeat(2,1fr);gap:4px;padding:4px;border:1px solid oklch(0.87 0.015 250);border-radius:14px;background:white}.ds-nav button{min-height:44px;border:0;border-radius:10px;background:transparent;color:oklch(0.22 0.025 255);font:500 14px ui-sans-serif,system-ui,sans-serif}.ds-nav .is-active{background:oklch(0.94 0.018 250);color:oklch(0.28 0.055 258)}.ds-nav button:focus-visible{outline:3px solid oklch(0.64 0.15 250 / .35);outline-offset:1px}" },
+    { "name": "Request Ledger Row", "kind": "custom", "refersTo": "request-row", "description": "Full-width request-type choice with a brief committed-state response.", "html": "<button class=\"ds-row is-selected\"><span>01</span><span>+</span><strong>Request Sistem Baru</strong><i>↗</i></button>", "css": ".ds-row{position:relative;display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:start;width:100%;padding:20px 4px;border:0;border-bottom:1px solid oklch(0.87 0.015 250);background:transparent;color:oklch(0.22 0.025 255);text-align:left}.ds-row::before{content:'';position:absolute;inset:16px auto 16px 0;width:1px;background:oklch(0.28 0.055 258);transform:scaleY(0);transition:transform 200ms ease-out}.ds-row.is-selected{background:oklch(0.94 0.018 250 / .8)}.ds-row.is-selected::before{transform:scaleY(1)}.ds-row i{font-style:normal;transition:transform 200ms ease-out}.ds-row.is-selected i{transform:translateX(2px)}" },
+    { "name": "Status Badge", "kind": "chip", "refersTo": "ticket-status", "description": "Compact status marker; use the primary fill only for active work.", "html": "<span class=\"ds-status\">Dikerjakan</span>", "css": ".ds-status{display:inline-flex;align-items:center;min-height:24px;padding:0 9px;border-radius:999px;background:oklch(0.28 0.055 258);color:oklch(0.985 0.004 250);font:600 12px ui-sans-serif,system-ui,sans-serif}" }
+  ],
+  "narrative": {
+    "northStar": "The Operational Service Ledger",
+    "overview": "Internal Request Hub makes a handoff feel clear and accountable instead of bureaucratic. Cool paper-white surfaces, navy ink, restrained cobalt response, and thin ledger dividers make the screen calm enough for routine internal work while keeping the next action obvious.",
+    "keyCharacteristics": ["Divider-led composition instead of repeated feature cards.", "One primary navy action per local task.", "Generous reading space around form fields and request rows.", "Short state transitions that support, never delay, task completion."],
+    "rules": [
+      { "name": "The Quiet Accent Rule", "body": "Cobalt communicates focus or a committed choice; it is not a decorative fill scattered across a screen.", "section": "colors" },
+      { "name": "The Identifier Rule", "body": "Monospace is used only for ticket IDs and numerical monitoring values, where tabular clarity is functional.", "section": "typography" },
+      { "name": "The Ledger Depth Rule", "body": "Do not combine a heavy border with a broad shadow on the same surface. A surface chooses one structural cue.", "section": "elevation" }
+    ],
+    "dos": ["Do keep visible labels, nearby help, and field-level errors for requester forms.", "Do use a vertical request sequence on phones and preserve every core requester action.", "Do reserve the navy/cobalt range for primary actions, focus, and committed states."],
+    "donts": ["Don't turn the request-type flow into equal icon cards or a marketing-style hero.", "Don't make touch actions depend on hover or use requester controls below 44px.", "Don't expose technical classification in requester-facing views."]
+  }
+}
