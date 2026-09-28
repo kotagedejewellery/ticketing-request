@@ -135,6 +135,7 @@ describe("getPublicTicket", () => {
       title: "POS Outlet",
       status: "Baru",
       publicProgress: ticket.publicProgress,
+      createdAt: ticket.createdAt,
       updatedAt: ticket.updatedAt,
     });
     expect(getPublicTicket(ticket)).not.toHaveProperty("trackingToken");

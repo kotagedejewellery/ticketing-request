@@ -91,7 +91,7 @@ export const ticketRecordSchema = z.discriminatedUnion("type", [
 ]);
 
 export type Ticket = z.infer<typeof ticketRecordSchema>;
-export type PublicTicket = Pick<Ticket, "id" | "type" | "status" | "publicProgress" | "updatedAt"> & { title: string };
+export type PublicTicket = Pick<Ticket, "id" | "type" | "status" | "publicProgress" | "createdAt" | "updatedAt"> & { title: string };
 
 export const ticketChangesSchema = z.object({
   status: z.enum(TICKET_STATUSES),
@@ -157,6 +157,7 @@ export function getPublicTicket(ticket: Ticket): PublicTicket {
     title: getTicketTitle(ticket),
     status: ticket.status,
     publicProgress: ticket.publicProgress,
+    createdAt: ticket.createdAt,
     updatedAt: ticket.updatedAt,
   };
 }

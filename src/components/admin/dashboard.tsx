@@ -1,88 +1,75 @@
 "use client";
 
-import { FilterIcon, FolderOpenIcon, ListFilterIcon, RefreshCwIcon } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowUpRightIcon, ClipboardListIcon, LoaderCircleIcon } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { AdminManagement } from "@/components/admin/admin-management";
-import type { EngineerSession } from "@/components/auth/engineer-login-form";
-import { TicketDetailDialog } from "@/components/admin/ticket-detail-dialog";
 import { TicketStatusBadge } from "@/components/shared/ticket-status-badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { getRequesterName, getTicketSummary, getTicketTitle, REQUEST_TYPE_LABELS, TICKET_STATUSES, type Ticket, type TicketChanges } from "@/lib/domain/tickets";
+import { getRequesterName, getTicketTitle, type Ticket } from "@/lib/domain/tickets";
 
-export function Dashboard({ user }: { user: EngineerSession }) {
+export function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [divisionFilter, setDivisionFilter] = useState("all");
-  const [selectedId, setSelectedId] = useState<string>();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadTickets = useCallback(async () => {
-    setIsLoading(true);
-    setMessage("");
-    try {
-      const response = await fetch("/api/tickets");
-      const payload = await response.json().catch(() => undefined) as { tickets?: Ticket[]; message?: string } | undefined;
-      if (!response.ok) throw new Error(payload?.message ?? "Tiket belum dapat dimuat.");
-      setTickets(payload?.tickets ?? []);
-    } catch (cause) {
-      setMessage(cause instanceof Error ? cause.message : "Tiket belum dapat dimuat.");
-    } finally {
-      setIsLoading(false);
-    }
+  useEffect(() => {
+    let active = true;
+    void fetch("/api/tickets")
+      .then(async (response) => {
+        const payload = await response.json().catch(() => undefined) as { tickets?: Ticket[]; message?: string } | undefined;
+        if (!response.ok) throw new Error(payload?.message ?? "Tiket belum dapat dimuat.");
+        if (active) setTickets(payload?.tickets ?? []);
+      })
+      .catch((cause) => { if (active) setMessage(cause instanceof Error ? cause.message : "Tiket belum dapat dimuat."); })
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
   }, []);
 
-  useEffect(() => { void loadTickets(); }, [loadTickets]);
-
-  const updateTicket = async (ticketId: string, changes: TicketChanges) => {
-    const response = await fetch(`/api/tickets/${encodeURIComponent(ticketId)}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(changes) });
-    const payload = await response.json().catch(() => undefined) as { ticket?: Ticket; message?: string } | undefined;
-    if (!response.ok || !payload?.ticket) throw new Error(payload?.message ?? "Tiket belum dapat diperbarui.");
-    setTickets((current) => current.map((ticket) => ticket.id === ticketId ? payload.ticket! : ticket));
-  };
-
-  const divisions = useMemo(() => [...new Set(tickets.map((ticket) => ticket.division))].sort(), [tickets]);
-  const displayedTickets = tickets.filter((ticket) => (typeFilter === "all" || ticket.type === typeFilter) && (statusFilter === "all" || ticket.status === statusFilter) && (divisionFilter === "all" || ticket.division === divisionFilter));
-  const selectedTicket = tickets.find((ticket) => ticket.id === selectedId);
+  const needsReview = tickets.filter((ticket) => ["Baru", "Ditinjau", "Menunggu Informasi"].includes(ticket.status)).length;
+  const inProgress = tickets.filter((ticket) => ["Dijadwalkan", "Dikerjakan"].includes(ticket.status)).length;
+  const completed = tickets.filter((ticket) => ticket.status === "Selesai").length;
 
   return (
     <section aria-labelledby="dashboard-title" className="w-full">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div><h1 id="dashboard-title" className="document-title text-balance text-4xl sm:text-5xl">Request untuk ditindaklanjuti.</h1><p className="mt-3 text-sm text-muted-foreground">Masuk sebagai {user.name} · {user.role === "admin" ? "Admin" : "Engineer"}</p></div>
-        <Button type="button" variant="outline" className="h-11" onClick={() => void loadTickets()} disabled={isLoading} aria-busy={isLoading}><RefreshCwIcon aria-hidden="true" className={isLoading ? "animate-spin" : undefined} /> {isLoading ? "Memuat..." : "Muat ulang"}</Button>
+      <div className="max-w-2xl">
+        <h1 id="dashboard-title" className="document-title text-balance text-4xl sm:text-5xl">Ringkasan pekerjaan.</h1>
+        <p className="mt-3 leading-7 text-muted-foreground">Lihat kondisi request saat ini, lalu buka daftar tiket untuk menindaklanjutinya.</p>
       </div>
 
-      <div className="mt-7 grid gap-3 border-y border-border py-4 sm:grid-cols-3 sm:py-5">
-        <Metric label="Perlu ditinjau" value={tickets.filter((ticket) => ["Baru", "Ditinjau"].includes(ticket.status)).length} />
-        <Metric label="Sedang dikerjakan" value={tickets.filter((ticket) => ticket.status === "Dikerjakan").length} />
-        <Metric label="Selesai" value={tickets.filter((ticket) => ticket.status === "Selesai").length} />
-      </div>
+      <dl className="mt-10 grid divide-y border-y document-rule sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <Metric label="Perlu ditinjau" value={needsReview} />
+        <Metric label="Dalam proses" value={inProgress} />
+        <Metric label="Selesai" value={completed} />
+      </dl>
 
-      <div className="mt-7 border-y document-rule py-5"><div className="flex items-center gap-2"><FilterIcon aria-hidden="true" className="size-4 text-accent" /><h2 className="font-medium">Filter request</h2></div><div className="mt-4 grid gap-3 md:grid-cols-3"><FilterSelect label="Jenis request" value={typeFilter} onChange={setTypeFilter} options={[["all", "Semua jenis"], ...Object.entries(REQUEST_TYPE_LABELS)]} /><FilterSelect label="Status" value={statusFilter} onChange={setStatusFilter} options={[["all", "Semua status"], ...TICKET_STATUSES.map((status) => [status, status])]} /><FilterSelect label="Divisi" value={divisionFilter} onChange={setDivisionFilter} options={[["all", "Semua divisi"], ...divisions.map((division) => [division, division])]} /></div></div>
+      <section aria-labelledby="recent-tickets-title" className="mt-10">
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b document-rule pb-4">
+          <div>
+            <h2 id="recent-tickets-title" className="text-xl font-semibold tracking-[-0.02em]">Tiket terbaru</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Enam request terakhir yang masuk ke register.</p>
+          </div>
+          <Link href="/engineer/tickets" className="inline-flex h-10 items-center gap-2 rounded-md px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Lihat semua tiket <ArrowUpRightIcon aria-hidden="true" className="size-4" /></Link>
+        </div>
 
-      {message ? <p role="alert" className="mt-5 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{message}</p> : null}
-      {isLoading ? <p role="status" className="mt-6 text-sm text-muted-foreground">Memuat tiket dari spreadsheet...</p> : displayedTickets.length ? <TicketList tickets={displayedTickets} onOpen={setSelectedId} /> : <EmptyState />}
-      {selectedTicket ? <TicketDetailDialog key={selectedTicket.id} ticket={selectedTicket} onClose={() => setSelectedId(undefined)} onSave={updateTicket} /> : null}
-      <AdminManagement user={user} />
+        {isLoading ? <p role="status" className="mt-6 flex items-center gap-2 text-sm text-muted-foreground"><LoaderCircleIcon aria-hidden="true" className="size-4 animate-spin" /> Memuat tiket...</p> : null}
+        {message ? <p role="alert" className="mt-6 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{message}</p> : null}
+        {!isLoading && !message && tickets.length ? <RecentTickets tickets={tickets.slice(0, 6)} /> : null}
+        {!isLoading && !message && !tickets.length ? <div className="mt-6 border-y document-rule py-12 text-center"><ClipboardListIcon aria-hidden="true" className="mx-auto size-5 text-muted-foreground" /><h2 className="mt-3 font-medium">Belum ada tiket masuk</h2><p className="mt-1 text-sm text-muted-foreground">Request baru akan muncul di sini setelah dikirim.</p></div> : null}
+      </section>
     </section>
   );
 }
 
 function Metric({ label, value }: { label: string; value: number }) {
-  return <Card className="rounded-none border-0 bg-transparent shadow-none"><CardContent className="flex items-end justify-between px-1 py-2 sm:px-3"><p className="text-sm text-muted-foreground">{label}</p><p className="font-mono text-3xl font-semibold tracking-[-0.04em] text-primary tabular-nums">{value}</p></CardContent></Card>;
+  return <div className="flex items-baseline justify-between gap-4 px-1 py-5 sm:px-5"><dt className="text-sm text-muted-foreground">{label}</dt><dd className="font-mono text-3xl font-semibold tracking-[-0.04em] tabular-nums text-primary">{value}</dd></div>;
 }
 
-function FilterSelect({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: string[][] }) {
-  return <label className="grid gap-2 text-sm font-medium">{label}<select value={value} onChange={(event) => onChange(event.target.value)} className="h-12 rounded-xl border border-input bg-background px-3 text-base font-normal outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">{options.map(([optionValue, optionLabel]) => <option key={optionValue} value={optionValue}>{optionLabel}</option>)}</select></label>;
-}
-
-function TicketList({ tickets, onOpen }: { tickets: Ticket[]; onOpen: (id: string) => void }) {
-  return <div className="mt-5 overflow-hidden border-y document-rule bg-card/45"><div className="hidden overflow-x-auto md:block"><table className="w-full min-w-200 text-left text-sm"><thead className="border-b document-rule bg-muted/50 text-xs font-medium tracking-wide text-muted-foreground"><tr><th className="px-5 py-3">Tiket</th><th className="px-5 py-3">Request</th><th className="px-5 py-3">Requester</th><th className="px-5 py-3">Status</th><th className="px-5 py-3"><span className="sr-only">Aksi</span></th></tr></thead><tbody className="divide-y divide-border">{tickets.map((ticket) => <tr key={ticket.id} className="hover:bg-muted/30"><td className="px-5 py-4 font-mono text-xs">{ticket.id}</td><td className="max-w-80 px-5 py-4"><p className="font-medium">{getTicketTitle(ticket)}</p><p className="mt-1 line-clamp-1 text-muted-foreground">{getTicketSummary(ticket)}</p></td><td className="px-5 py-4"><p>{getRequesterName(ticket)}</p><p className="mt-1 text-muted-foreground">{ticket.division}</p></td><td className="px-5 py-4"><TicketStatusBadge status={ticket.status} /></td><td className="px-5 py-4 text-right"><Button variant="outline" size="sm" className="rounded-sm" onClick={() => onOpen(ticket.id)}>Buka</Button></td></tr>)}</tbody></table></div><div className="grid divide-y divide-border md:hidden">{tickets.map((ticket) => <article key={ticket.id} className="p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-mono text-xs text-muted-foreground">{ticket.id}</p><h2 className="mt-1 font-medium">{getTicketTitle(ticket)}</h2></div><TicketStatusBadge status={ticket.status} /></div><p className="mt-3 text-sm leading-6 text-muted-foreground">{getTicketSummary(ticket)}</p><div className="mt-4 flex items-center justify-between gap-3"><p className="text-sm">{getRequesterName(ticket)} · <span className="text-muted-foreground">{ticket.division}</span></p><Button variant="outline" size="sm" className="h-10 rounded-sm px-3" onClick={() => onOpen(ticket.id)}>Buka</Button></div></article>)}</div></div>;
-}
-
-function EmptyState() {
-  return <div role="status" className="mt-5 rounded-xl border border-dashed border-border bg-card px-6 py-12 text-center"><span className="mx-auto flex size-11 items-center justify-center rounded-full bg-muted"><FolderOpenIcon aria-hidden="true" className="size-5" /></span><h2 className="mt-4 font-semibold">Tidak ada tiket yang sesuai</h2><p className="mt-2 text-sm text-muted-foreground">Ubah atau kosongkan filter untuk melihat request lain.</p><ListFilterIcon aria-hidden="true" className="sr-only" /></div>;
+function RecentTickets({ tickets }: { tickets: Ticket[] }) {
+  return <div className="divide-y document-rule">
+    {tickets.map((ticket) => <Link key={ticket.id} href={`/engineer/tickets/${encodeURIComponent(ticket.id)}`} className="grid gap-3 py-5 transition-colors hover:bg-muted/50 sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:items-center sm:px-4">
+      <p className="font-mono text-xs text-muted-foreground">{ticket.id}</p>
+      <div className="min-w-0"><p className="truncate font-medium">{getTicketTitle(ticket)}</p><p className="mt-1 truncate text-sm text-muted-foreground">{getRequesterName(ticket)} · {ticket.division}</p></div>
+      <TicketStatusBadge status={ticket.status} />
+    </Link>)}
+  </div>;
 }

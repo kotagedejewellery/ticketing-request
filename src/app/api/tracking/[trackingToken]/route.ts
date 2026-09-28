@@ -1,5 +1,6 @@
 import { getPublicTicket, trackingTokenSchema } from "@/lib/domain/tickets";
-import { getTicketByTrackingToken } from "@/lib/infrastructure/sheet-store";
+import { getPublicTicketEvent } from "@/lib/domain/ticket-events";
+import { getTicketByTrackingToken, listTicketEvents } from "@/lib/infrastructure/sheet-store";
 
 export const runtime = "nodejs";
 
@@ -14,7 +15,7 @@ export async function GET(_request: Request, context: RouteContext) {
   try {
     const ticket = await getTicketByTrackingToken(trackingToken);
     if (!ticket) return Response.json({ message: "Tiket tidak ditemukan atau tautan sudah tidak berlaku." }, { status: 404 });
-    return Response.json({ ticket: getPublicTicket(ticket) });
+    return Response.json({ ticket: getPublicTicket(ticket), history: (await listTicketEvents(ticket.id)).map(getPublicTicketEvent) });
   } catch {
     return Response.json({ message: "Tiket belum dapat dimuat. Silakan coba lagi." }, { status: 503 });
   }

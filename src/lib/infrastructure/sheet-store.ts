@@ -13,17 +13,41 @@ import {
   type PublicEngineerUser,
 } from "../domain/auth";
 import { createSystem, systemInputSchema, systemRecordSchema, type ManagedSystem } from "../domain/systems";
+import { createTicketEvent, ticketEventSchema, type TicketEvent, type TicketEventActor } from "../domain/ticket-events";
 import {
   changeTicket,
   createTicket,
+  getRequesterName,
+  getTicketTitle,
   ticketRecordSchema,
   type RequestInput,
   type Ticket,
   type TicketChanges,
 } from "../domain/tickets";
 
+const TICKET_HEADERS = [
+  "id",
+  "type",
+  "title",
+  "requesterName",
+  "division",
+  "systemName",
+  "urgency",
+  "status",
+  "publicProgress",
+  "technicalClassification",
+  "trackingToken",
+  "createdAt",
+  "updatedAt",
+  "payload",
+] as const;
+
+const LEGACY_TICKET_HEADERS = ["id", "payload"] as const;
+const TICKET_EVENT_HEADERS = ["id", "ticketId", "createdAt", "actorId", "actorName", "previousStatus", "status", "publicProgress", "technicalClassification"] as const;
+
 const TABS = {
-  tickets: { title: "Tickets", headers: ["id", "payload"] },
+  tickets: { title: "Tickets", headers: TICKET_HEADERS },
+  ticketEvents: { title: "TicketEvents", headers: TICKET_EVENT_HEADERS },
   systems: { title: "Systems", headers: ["id", "name", "active", "createdAt", "updatedAt"] },
   users: { title: "EngineerUsers", headers: ["id", "username", "name", "role", "active", "passwordHash", "createdAt", "updatedAt"] },
 } as const;
@@ -64,7 +88,11 @@ async function ensureTab(tab: SheetTab) {
   }
 
   const header = await sheets.spreadsheets.values.get({ spreadsheetId, range: `${tab.title}!1:1` });
-  if (header.data.values?.[0]?.join("|") !== tab.headers.join("|")) {
+  const currentHeaders = header.data.values?.[0] ?? [];
+  if (tab === TABS.tickets && currentHeaders.join("|") === LEGACY_TICKET_HEADERS.join("|")) {
+    await migrateLegacyTicketRows(sheets, spreadsheetId);
+  }
+  if (currentHeaders.join("|") !== tab.headers.join("|")) {
     await sheets.spreadsheets.values.update({
       spreadsheetId,
       range: `${tab.title}!A1`,
@@ -111,10 +139,9 @@ async function clearRow(tab: SheetTab, row: number) {
 }
 
 export async function listTickets() {
-  const { rows } = await readRows(TABS.tickets);
+  const rows = await readTicketRows();
   return rows
-    .map((row) => ticketRecordSchema.safeParse(parseJson(row[1])))
-    .flatMap((result) => result.success ? [result.data] : [])
+    .map((row) => row.value)
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 
@@ -137,19 +164,40 @@ export async function createStoredTicket(request: RequestInput) {
     ...createTicket(request, now, sequence),
     trackingToken: randomBytes(24).toString("base64url"),
   });
-  await appendRow(TABS.tickets, [ticket.id, JSON.stringify(ticket)]);
+  await appendRow(TABS.tickets, ticketToRow(ticket));
+  await appendTicketEvent(createTicketEvent(
+    ticket.id,
+    { status: ticket.status, publicProgress: ticket.publicProgress, technicalClassification: ticket.technicalClassification },
+    { actorId: "system", actorName: "Sistem" },
+  ));
   return ticket;
 }
 
-export async function updateStoredTicket(ticketId: string, changes: TicketChanges) {
+export async function updateStoredTicket(ticketId: string, changes: TicketChanges, actor: TicketEventActor) {
   const stored = await readTicketRows();
   const current = stored.find((row) => row.value.id === ticketId);
   if (!current) throw new Error("Tiket tidak ditemukan.");
 
   const nextTicket = changeTicket([current.value], ticketId, changes)[0];
   const ticket = ticketRecordSchema.parse(nextTicket);
-  await overwriteRow(TABS.tickets, current.row, [ticket.id, JSON.stringify(ticket)]);
+  await overwriteRow(TABS.tickets, current.row, ticketToRow(ticket));
+  await appendTicketEvent(createTicketEvent(
+    ticket.id,
+    { status: ticket.status, publicProgress: ticket.publicProgress, technicalClassification: ticket.technicalClassification },
+    actor,
+    current.value.status,
+  ));
   return ticket;
+}
+
+export async function listTicketEvents(ticketId: string) {
+  const { rows } = await readRows(TABS.ticketEvents);
+  return rows
+    .map((row) => ticketEventSchema.safeParse({
+      id: row[0], ticketId: row[1], createdAt: row[2], actorId: row[3], actorName: row[4], previousStatus: row[5], status: row[6], publicProgress: row[7], technicalClassification: row[8],
+    }))
+    .flatMap((result) => result.success && result.data.ticketId === ticketId ? [result.data] : [])
+    .sort((left, right) => left.createdAt.localeCompare(right.createdAt));
 }
 
 export async function listSystems(includeInactive = false) {
@@ -255,7 +303,7 @@ export async function deleteEngineerUser(userId: string) {
 async function readTicketRows(): Promise<RowWithIndex<Ticket>[]> {
   const { rows } = await readRows(TABS.tickets);
   return rows.flatMap((row, index) => {
-    const result = ticketRecordSchema.safeParse(parseJson(row[1]));
+    const result = ticketRecordSchema.safeParse(parseJson(row[TICKET_HEADERS.length - 1] ?? row[1]));
     return result.success ? [{ value: result.data, row: index + 2 }] : [];
   });
 }
@@ -303,6 +351,62 @@ function systemToRow(system: ManagedSystem) {
 
 function userToRow(user: EngineerUser) {
   return [user.id, user.username, user.name, user.role, String(user.active), user.passwordHash, user.createdAt, user.updatedAt];
+}
+
+function ticketToRow(ticket: Ticket) {
+  return [
+    ticket.id,
+    ticket.type,
+    getTicketTitle(ticket),
+    getRequesterName(ticket),
+    ticket.division,
+    getTicketSystemName(ticket),
+    ticket.type === "bug" ? "" : ticket.urgency,
+    ticket.status,
+    ticket.publicProgress,
+    ticket.technicalClassification ?? "",
+    ticket.trackingToken ?? "",
+    ticket.createdAt,
+    ticket.updatedAt,
+    JSON.stringify(ticket),
+  ];
+}
+
+function ticketEventToRow(event: TicketEvent) {
+  return [event.id, event.ticketId, event.createdAt, event.actorId, event.actorName, event.previousStatus ?? "", event.status, event.publicProgress, event.technicalClassification ?? ""];
+}
+
+async function appendTicketEvent(event: TicketEvent) {
+  await appendRow(TABS.ticketEvents, ticketEventToRow(event));
+}
+
+function getTicketSystemName(ticket: Ticket) {
+  if (ticket.type === "enhancement") return ticket.systemName;
+  if (ticket.type === "bug") return ticket.affectedSystem;
+  return "";
+}
+
+async function migrateLegacyTicketRows(
+  sheets: Awaited<ReturnType<typeof client>>,
+  spreadsheetId: string,
+) {
+  const response = await sheets.spreadsheets.values.get({ spreadsheetId, range: `${TABS.tickets.title}!A2:B` });
+  const legacyRows = response.data.values ?? [];
+  if (!legacyRows.length) return;
+
+  const rows = legacyRows.map((row) => {
+    const ticket = ticketRecordSchema.safeParse(parseJson(row[1]));
+    if (ticket.success) return ticketToRow(ticket.data);
+
+    return [row[0] ?? "", ...Array(TICKET_HEADERS.length - 2).fill(""), row[1] ?? ""];
+  });
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId,
+    range: `${TABS.tickets.title}!A2`,
+    valueInputOption: "RAW",
+    requestBody: { values: rows },
+  });
 }
 
 function parseJson(value: string | undefined) {

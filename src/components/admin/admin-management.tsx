@@ -13,8 +13,17 @@ type ManagedSystem = { id: string; name: string; active: boolean };
 type ManagedUser = { id: string; username: string; name: string; role: "admin" | "engineer"; active: boolean };
 type ActionOperation = "activate" | "deactivate" | "delete";
 type ConfirmationAction = { resource: "system" | "user"; operation: ActionOperation; id: string; name: string };
+type AdminSection = "systems" | "users";
 
-export function AdminManagement({ user }: { user: EngineerSession }) {
+async function getAdminData() {
+  const [systemsResponse, usersResponse] = await Promise.all([fetch("/api/admin/systems"), fetch("/api/admin/users")]);
+  const systemsPayload = await systemsResponse.json() as { systems?: ManagedSystem[]; message?: string };
+  const usersPayload = await usersResponse.json() as { users?: ManagedUser[]; message?: string };
+  if (!systemsResponse.ok || !usersResponse.ok) throw new Error(systemsPayload.message ?? usersPayload.message ?? "Data administrasi belum dapat dimuat.");
+  return { systems: systemsPayload.systems ?? [], users: usersPayload.users ?? [] };
+}
+
+export function AdminManagement({ user, section }: { user: EngineerSession; section: AdminSection }) {
   const [systems, setSystems] = useState<ManagedSystem[]>([]);
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [message, setMessage] = useState("");
@@ -28,12 +37,9 @@ export function AdminManagement({ user }: { user: EngineerSession }) {
     if (showLoading) setIsLoading(true);
     setMessage("");
     try {
-      const [systemsResponse, usersResponse] = await Promise.all([fetch("/api/admin/systems"), fetch("/api/admin/users")]);
-      const systemsPayload = await systemsResponse.json() as { systems?: ManagedSystem[]; message?: string };
-      const usersPayload = await usersResponse.json() as { users?: ManagedUser[]; message?: string };
-      if (!systemsResponse.ok || !usersResponse.ok) throw new Error(systemsPayload.message ?? usersPayload.message ?? "Data administrasi belum dapat dimuat.");
-      setSystems(systemsPayload.systems ?? []);
-      setUsers(usersPayload.users ?? []);
+      const data = await getAdminData();
+      setSystems(data.systems);
+      setUsers(data.users);
     } catch (cause) {
       setMessage(cause instanceof Error ? cause.message : "Data administrasi belum dapat dimuat.");
     } finally {
@@ -41,7 +47,18 @@ export function AdminManagement({ user }: { user: EngineerSession }) {
     }
   };
 
-  useEffect(() => { void load(true); }, []);
+  useEffect(() => {
+    let active = true;
+    void getAdminData()
+      .then((data) => {
+        if (!active) return;
+        setSystems(data.systems);
+        setUsers(data.users);
+      })
+      .catch((cause) => { if (active) setMessage(cause instanceof Error ? cause.message : "Data administrasi belum dapat dimuat."); })
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
+  }, []);
 
   const request = async (url: string, init: RequestInit, fallbackMessage: string) => {
     const response = await fetch(url, init);
@@ -143,14 +160,14 @@ export function AdminManagement({ user }: { user: EngineerSession }) {
   const isAddingUser = pendingAction === "add-user";
 
   return (
-    <section aria-labelledby="admin-management-title" className="mt-10 border-t border-border pt-8">
-      <div><h2 id="admin-management-title" className="text-xl font-semibold tracking-[-0.02em]">Pengelolaan engineer</h2><p className="mt-1 text-sm text-muted-foreground">Kelola pilihan sistem pada form dan akun engineer melalui spreadsheet internal.</p></div>
+    <section aria-labelledby="admin-management-title">
+      <div><h1 id="admin-management-title" className="document-title text-balance text-4xl sm:text-5xl">{section === "systems" ? "Sistem form." : "User engineer."}</h1><p className="mt-3 max-w-2xl leading-7 text-muted-foreground">{section === "systems" ? "Kelola pilihan sistem yang tersedia pada formulir request." : "Kelola akun, peran, dan status akses engineer."}</p></div>
       <div className="mt-4 grid gap-3" aria-live="polite">
         {message ? <p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">{message}</p> : null}
         {successMessage ? <p role="status" className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 p-3 text-sm text-success-foreground"><CheckCircle2Icon aria-hidden="true" className="size-4" />{successMessage}</p> : null}
       </div>
-      {isLoading ? <p role="status" className="mt-5 flex items-center gap-2 text-sm text-muted-foreground"><LoaderCircleIcon aria-hidden="true" className="size-4 animate-spin" /> Memuat pengelolaan internal...</p> : <div className="mt-6 grid gap-8 lg:grid-cols-2" aria-busy={Boolean(pendingAction)}>
-        <section className="rounded-2xl border border-border bg-card p-5 sm:p-6" aria-labelledby="system-management-title">
+      {isLoading ? <p role="status" className="mt-8 flex items-center gap-2 text-sm text-muted-foreground"><LoaderCircleIcon aria-hidden="true" className="size-4 animate-spin" /> Memuat pengelolaan internal...</p> : <div className="mt-8" aria-busy={Boolean(pendingAction)}>
+        {section === "systems" ? <section className="max-w-3xl border-y document-rule py-6" aria-labelledby="system-management-title">
           <div className="flex items-center gap-2"><WrenchIcon aria-hidden="true" className="size-4" /><h3 id="system-management-title" className="font-semibold">Sistem pada form</h3></div>
           <form onSubmit={addSystem} className="mt-4 flex flex-col gap-3 sm:flex-row">
             <Label htmlFor="system-name" className="sr-only">Nama sistem</Label>
@@ -160,9 +177,9 @@ export function AdminManagement({ user }: { user: EngineerSession }) {
           <div className="mt-5 divide-y divide-border border-y border-border">
             {systems.length ? systems.map((system) => <div key={system.id} className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"><p className={system.active ? "min-w-0 break-words font-medium" : "min-w-0 break-words text-muted-foreground line-through"}>{system.name}</p><div className="flex flex-wrap gap-2"><Button type="button" variant="outline" size="sm" className="h-10" disabled={isBusy} onClick={() => openConfirmation({ resource: "system", operation: system.active ? "deactivate" : "activate", id: system.id, name: system.name })}>{system.active ? "Nonaktifkan" : "Aktifkan"}</Button><Button type="button" variant="destructive" size="sm" className="h-10" disabled={isBusy} onClick={() => openConfirmation({ resource: "system", operation: "delete", id: system.id, name: system.name })}><Trash2Icon aria-hidden="true" /> Hapus</Button></div></div>) : <p className="py-4 text-sm text-muted-foreground">Belum ada sistem yang dapat dikelola.</p>}
           </div>
-        </section>
+        </section> : null}
 
-        <section className="rounded-2xl border border-border bg-card p-5 sm:p-6" aria-labelledby="user-management-title">
+        {section === "users" ? <section className="max-w-4xl border-y document-rule py-6" aria-labelledby="user-management-title">
           <div className="flex items-center gap-2"><UsersRoundIcon aria-hidden="true" className="size-4" /><h3 id="user-management-title" className="font-semibold">User engineer</h3></div>
           <form onSubmit={addUser} className="mt-4 grid gap-3 sm:grid-cols-2">
             <Field id="user-name" name="name" label="Nama" disabled={isBusy} />
@@ -177,7 +194,7 @@ export function AdminManagement({ user }: { user: EngineerSession }) {
               return <div key={managedUser.id} className="grid gap-3 py-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"><div className="min-w-0"><p className="break-words font-medium">{managedUser.name}</p><p className="mt-1 font-mono text-xs text-muted-foreground">{managedUser.username} Â· {managedUser.active ? "Aktif" : "Nonaktif"}</p></div><div className="flex flex-wrap items-center gap-2"><label className="sr-only" htmlFor={`role-${managedUser.id}`}>Role {managedUser.name}</label><select id={`role-${managedUser.id}`} value={managedUser.role} disabled={isBusy} onChange={(event) => void updateUserRole(managedUser, event.target.value as ManagedUser["role"])} className="h-10 rounded-xl border border-input bg-background px-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"><option value="engineer">Engineer</option><option value="admin">Admin</option></select>{isChangingRole ? <LoaderCircleIcon aria-label="Memperbarui role" className="size-4 animate-spin text-muted-foreground" /> : null}<Button type="button" variant="outline" size="sm" className="h-10" disabled={isBusy} onClick={() => openConfirmation({ resource: "user", operation: managedUser.active ? "deactivate" : "activate", id: managedUser.id, name: managedUser.name })}>{managedUser.active ? "Nonaktifkan" : "Aktifkan"}</Button>{managedUser.id !== user.id ? <Button type="button" variant="destructive" size="sm" className="h-10" disabled={isBusy} onClick={() => openConfirmation({ resource: "user", operation: "delete", id: managedUser.id, name: managedUser.name })}><Trash2Icon aria-hidden="true" /> Hapus</Button> : null}</div></div>;
             }) : <p className="py-4 text-sm text-muted-foreground">Belum ada user engineer yang dapat dikelola.</p>}
           </div>
-        </section>
+        </section> : null}
       </div>}
       <ActionConfirmationDialog action={confirmation} error={confirmationError} isSubmitting={Boolean(pendingAction)} onCancel={() => setConfirmation(undefined)} onConfirm={() => void confirmAction()} />
     </section>

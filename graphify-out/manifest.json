@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/app/api/tickets/[ticketId]/route.ts": {
-    "mtime": 1790556615.0683215,
-    "seen": 1790559769.185992,
-    "ast_hash": "b10562e4f823c847b864c49faf5bad37",
+    "mtime": 1790578641.3232062,
+    "seen": 1790579822.510726,
+    "ast_hash": "1863919088ed85eba53f3488f486acde",
     "semantic_hash": ""
   },
   "src/app/api/tickets/route.ts": {
@@ -570,15 +570,15 @@
     "semantic_hash": ""
   },
   "src/components/admin/admin-management.tsx": {
-    "mtime": 1790556615.132514,
-    "seen": 1790559769.1860032,
-    "ast_hash": "6cfe89046a83c15f20f9f530358745e6",
+    "mtime": 1790579197.081986,
+    "seen": 1790579822.5115962,
+    "ast_hash": "40cbaf039c5d3c7be2ee4f538d4c2182",
     "semantic_hash": ""
   },
   "src/components/admin/dashboard.tsx": {
-    "mtime": 1790563797.4408293,
-    "seen": 1790566404.3266456,
-    "ast_hash": "02db7c770dc6644c836a534ed7666fe0",
+    "mtime": 1790578870.7550647,
+    "seen": 1790579822.511599,
+    "ast_hash": "9efb00e182795f59864a2c455820e538",
     "semantic_hash": ""
   },
   "src/components/admin/ticket-detail-dialog.tsx": {
@@ -612,9 +612,9 @@
     "semantic_hash": ""
   },
   "src/components/requester/tracking-panel.tsx": {
-    "mtime": 1790559488.9376807,
-    "seen": 1790559769.1860194,
-    "ast_hash": "98e9423d7819941b7a8a51a0a7f13e0a",
+    "mtime": 1790579149.7175677,
+    "seen": 1790579822.513079,
+    "ast_hash": "127378385c0e3b0c2f66673ad1ccd81b",
     "semantic_hash": ""
   },
   "src/components/shared/ticket-status-badge.tsx": {
@@ -648,15 +648,15 @@
     "semantic_hash": ""
   },
   "src/lib/domain/tickets.test.ts": {
-    "mtime": 1790556615.231231,
-    "seen": 1790559769.1860406,
-    "ast_hash": "dc6b63736b959cdaa745994275620fba",
+    "mtime": 1790578657.5893302,
+    "seen": 1790579822.5162063,
+    "ast_hash": "b189bc232313156486a5155a6467ec6b",
     "semantic_hash": ""
   },
   "src/lib/domain/tickets.ts": {
-    "mtime": 1790556615.2328691,
-    "seen": 1790559769.1860418,
-    "ast_hash": "b775e48147a5f344e94431b2a0e2bdd1",
+    "mtime": 1790578655.3301885,
+    "seen": 1790579822.5162091,
+    "ast_hash": "f8b4928739604776c0c5ad6f21b44605",
     "semantic_hash": ""
   },
   "src/lib/infrastructure/fonnte.test.ts": {
@@ -672,9 +672,9 @@
     "semantic_hash": ""
   },
   "src/lib/infrastructure/sheet-store.ts": {
-    "mtime": 1790556615.2343688,
-    "seen": 1790559769.186046,
-    "ast_hash": "05a545da35262611d8098dc1e9f8c443",
+    "mtime": 1790579025.458128,
+    "seen": 1790579822.5166469,
+    "ast_hash": "48d0d59604963bf385222c9d96035637",
     "semantic_hash": ""
   },
   "src/lib/security/login-rate-limit.test.ts": {
@@ -702,15 +702,15 @@
     "semantic_hash": "0d887e2881d4da1913c0e4901b6d67c4"
   },
   "src/app/api/tracking/[trackingToken]/route.ts": {
-    "mtime": 1790556615.093336,
-    "seen": 1790559769.185995,
-    "ast_hash": "10270f1ef364934f129aa5344b788560",
+    "mtime": 1790578643.1563535,
+    "seen": 1790579822.5109396,
+    "ast_hash": "87fdbe648bac57e3cf7fb21dee31ffb6",
     "semantic_hash": ""
   },
   "src/app/engineer/page.tsx": {
-    "mtime": 1790566362.5929601,
-    "seen": 1790566404.3260508,
-    "ast_hash": "6b4f968555212f91114059e7b45a9e1e",
+    "mtime": 1790578749.131572,
+    "seen": 1790579822.5109453,
+    "ast_hash": "565b79a4677bae8fa10ca5c56f61cc2b",
     "semantic_hash": ""
   },
   "src/app/lacak/[trackingToken]/page.tsx": {
@@ -720,9 +720,9 @@
     "semantic_hash": ""
   },
   "src/components/admin/engineer-workspace.tsx": {
-    "mtime": 1790563796.265607,
-    "seen": 1790566404.3266478,
-    "ast_hash": "91725be2efc3a496c93de716aca994f5",
+    "mtime": 1790578740.1295917,
+    "seen": 1790579822.511601,
+    "ast_hash": "c7e579b077b6c4f3ed6f8ae86c5056e5",
     "semantic_hash": ""
   },
   "src/components/auth/engineer-login-form.tsx": {
@@ -849,6 +849,66 @@
     "mtime": 1790566360.6465316,
     "seen": 1790566404.3263404,
     "ast_hash": "5b784a4ce6aac6ecaca2ddd15acde075",
+    "semantic_hash": ""
+  },
+  "src/app/engineer/layout.tsx": {
+    "mtime": 1790578747.045331,
+    "seen": 1790579822.5109432,
+    "ast_hash": "7bcd4f909cff527509d82c6983c62610",
+    "semantic_hash": ""
+  },
+  "src/app/engineer/systems/page.tsx": {
+    "mtime": 1790579001.5782962,
+    "seen": 1790579822.5109475,
+    "ast_hash": "c8241c832266052ba02bc6c22ae360f6",
+    "semantic_hash": ""
+  },
+  "src/app/engineer/tickets/[ticketId]/page.tsx": {
+    "mtime": 1790578941.4670603,
+    "seen": 1790579822.5109496,
+    "ast_hash": "586052d906a8451b6d3843db1cf18755",
+    "semantic_hash": ""
+  },
+  "src/app/engineer/tickets/page.tsx": {
+    "mtime": 1790578879.0582447,
+    "seen": 1790579822.5109515,
+    "ast_hash": "1ca220b83ca49523367d57478731a97f",
+    "semantic_hash": ""
+  },
+  "src/app/engineer/users/page.tsx": {
+    "mtime": 1790579005.2683306,
+    "seen": 1790579822.510953,
+    "ast_hash": "2eb2d12aa6d160656feec0ce05498efb",
+    "semantic_hash": ""
+  },
+  "src/components/admin/ticket-detail-workspace.tsx": {
+    "mtime": 1790578937.5195098,
+    "seen": 1790579822.5117543,
+    "ast_hash": "de48030faa074449f62471726985f7bc",
+    "semantic_hash": ""
+  },
+  "src/components/admin/tickets-workspace.tsx": {
+    "mtime": 1790578875.6590981,
+    "seen": 1790579822.5117567,
+    "ast_hash": "3461340d4a2d564030e5bbb44b26fc9d",
+    "semantic_hash": ""
+  },
+  "src/components/shared/ticket-timeline.tsx": {
+    "mtime": 1790579844.9424126,
+    "seen": 1790579908.1435263,
+    "ast_hash": "64556cd5172976cf19fb576ad03298ad",
+    "semantic_hash": ""
+  },
+  "src/lib/domain/ticket-events.test.ts": {
+    "mtime": 1790579842.9604845,
+    "seen": 1790579908.1454623,
+    "ast_hash": "bcd69a6114290460eddd72661d1ec25a",
+    "semantic_hash": ""
+  },
+  "src/lib/domain/ticket-events.ts": {
+    "mtime": 1790579841.2044053,
+    "seen": 1790579908.1454656,
+    "ast_hash": "14783c65399cea5e44ef3c36727b3c86",
     "semantic_hash": ""
   }
 }
