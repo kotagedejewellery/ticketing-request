@@ -169,6 +169,30 @@
     border: 1px solid var(--border);
     box-shadow: 0 18px 40px oklch(0.25 0.03 180 / 0.05);
   }
+
+  .engineer-shell {
+    container-type: inline-size;
+  }
+
+  .engineer-rail {
+    display: none;
+  }
+
+  @container (min-width: 42rem) {
+    .engineer-layout {
+      display: grid;
+      grid-template-columns: 6.5rem minmax(0, 1fr);
+    }
+
+    .engineer-rail {
+      display: block;
+    }
+
+    .engineer-mobile-navigation,
+    .engineer-mobile-logout {
+      display: none;
+    }
+  }
 }
 
 ::selection {

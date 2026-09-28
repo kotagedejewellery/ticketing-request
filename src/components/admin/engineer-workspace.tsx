@@ -42,10 +42,11 @@ export function EngineerWorkspace({ user, children }: EngineerWorkspaceProps) {
   };
 
   return (
-    <div className="min-h-dvh bg-background lg:grid lg:grid-cols-[6.5rem_minmax(0,1fr)]">
+    <div className="engineer-shell min-h-dvh bg-background">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Lewati navigasi</a>
 
-      <aside className="hidden border-r document-rule lg:block">
+      <div className="engineer-layout">
+        <aside className="engineer-rail border-r document-rule">
         <div className="sticky top-6 flex h-[calc(100dvh-3rem)] flex-col items-center px-4">
           <nav aria-label="Navigasi engineer" className="flex w-16 flex-1 flex-col items-center rounded-[2rem] bg-foreground py-3 text-background">
             <Link href="/engineer" aria-label="Internal Request Hub, ringkasan" className="group relative mb-5 flex size-10 items-center justify-center rounded-2xl text-background transition-colors hover:bg-background/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
@@ -63,9 +64,9 @@ export function EngineerWorkspace({ user, children }: EngineerWorkspaceProps) {
             </div>
           </nav>
         </div>
-      </aside>
+        </aside>
 
-      <div className="min-w-0">
+        <div className="min-w-0">
         <header className="border-b document-rule bg-background">
           <div className="mx-auto flex max-w-[100rem] items-center justify-between gap-4 px-5 py-3 sm:px-8 lg:px-10">
             <Link href="/engineer" className="min-w-0" aria-label="Internal Request Hub, ringkasan">
@@ -73,16 +74,17 @@ export function EngineerWorkspace({ user, children }: EngineerWorkspaceProps) {
             </Link>
             <div className="flex items-center gap-3">
               <p className="hidden text-sm text-muted-foreground sm:block">{user.name} · {user.role === "admin" ? "Admin" : "Engineer"}</p>
-              <Button type="button" variant="ghost" size="sm" className="h-10 lg:hidden" onClick={() => void logout()} disabled={isLoggingOut}><LogOutIcon aria-hidden="true" /> <span className="sr-only">{isLoggingOut ? "Keluar..." : "Keluar"}</span></Button>
+              <Button type="button" variant="ghost" size="sm" className="engineer-mobile-logout h-10" onClick={() => void logout()} disabled={isLoggingOut}><LogOutIcon aria-hidden="true" /> <span className="sr-only">{isLoggingOut ? "Keluar..." : "Keluar"}</span></Button>
             </div>
           </div>
-          <nav aria-label="Navigasi engineer" className="overflow-x-auto border-t document-rule lg:hidden">
+          <nav aria-label="Navigasi engineer" className="engineer-mobile-navigation overflow-x-auto border-t document-rule">
             <div className="flex min-w-max gap-1 px-5 py-2 sm:px-8">
               {items.map((item) => <MobileLink key={item.href} item={item} active={isActive(pathname, item)} />)}
             </div>
           </nav>
         </header>
         <main id="main-content" className="mx-auto w-full max-w-[100rem] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">{children}</main>
+        </div>
       </div>
     </div>
   );
