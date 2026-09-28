@@ -53,26 +53,27 @@
 }
 
 :root {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "Aptos", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --background: oklch(0.975 0.006 250);
-  --foreground: oklch(0.22 0.025 255);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.025 255);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.025 255);
-  --primary: oklch(0.28 0.055 258);
-  --primary-foreground: oklch(0.985 0.004 250);
-  --secondary: oklch(0.94 0.018 250);
-  --secondary-foreground: oklch(0.28 0.055 258);
-  --muted: oklch(0.95 0.01 250);
-  --muted-foreground: oklch(0.47 0.025 255);
-  --accent: oklch(0.64 0.15 250);
-  --accent-foreground: oklch(0.25 0.055 258);
+  --background: oklch(0.955 0.012 85);
+  --foreground: oklch(0.22 0.025 180);
+  --card: oklch(0.985 0.008 85);
+  --card-foreground: oklch(0.22 0.025 180);
+  --popover: oklch(0.985 0.008 85);
+  --popover-foreground: oklch(0.22 0.025 180);
+  --primary: oklch(0.28 0.045 180);
+  --primary-foreground: oklch(0.98 0.01 85);
+  --secondary: oklch(0.9 0.025 195);
+  --secondary-foreground: oklch(0.28 0.045 180);
+  --muted: oklch(0.93 0.012 85);
+  --muted-foreground: oklch(0.48 0.025 190);
+  --accent: oklch(0.64 0.1 70);
+  --accent-foreground: oklch(0.27 0.04 180);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.87 0.015 250);
-  --input: oklch(0.8 0.02 250);
-  --ring: oklch(0.56 0.14 250);
+  --border: oklch(0.78 0.018 195);
+  --input: oklch(0.73 0.022 195);
+  --ring: oklch(0.61 0.09 70);
   --success: oklch(0.6 0.12 155);
   --success-foreground: oklch(0.3 0.07 155);
   --warning: oklch(0.72 0.15 77);
@@ -82,7 +83,7 @@
   --chart-3: oklch(0.68 0.12 252);
   --chart-4: oklch(0.72 0.15 77);
   --chart-5: oklch(0.55 0.13 300);
-  --radius: 0.875rem;
+  --radius: 0.5rem;
   --sidebar: oklch(0.975 0.006 250);
   --sidebar-foreground: oklch(0.22 0.025 255);
   --sidebar-primary: oklch(0.28 0.055 258);
@@ -141,6 +142,32 @@
   html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .document-kicker {
+    color: var(--muted-foreground);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .document-rule {
+    border-color: color-mix(in oklch, var(--border) 88%, var(--primary));
+  }
+
+  .document-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+  }
+
+  .document-panel {
+    background: color-mix(in oklch, var(--card) 88%, transparent);
+    border: 1px solid var(--border);
+    box-shadow: 0 18px 40px oklch(0.25 0.03 180 / 0.05);
   }
 }
 

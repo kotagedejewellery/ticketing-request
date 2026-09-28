@@ -118,23 +118,23 @@ export function RequestForm({ type, onBack, onSubmit }: RequestFormProps) {
   };
 
   return (
-    <section className="mx-auto w-full max-w-4xl">
-      <Button type="button" variant="ghost" onClick={onBack} className="-ml-2 h-11 px-2 text-muted-foreground hover:text-foreground">
+    <section className="mx-auto w-full max-w-5xl">
+      <Button type="button" variant="ghost" onClick={onBack} className="-ml-2 h-11 rounded-sm px-2 text-muted-foreground hover:bg-secondary hover:text-foreground">
         <ArrowLeftIcon aria-hidden="true" /> Kembali memilih jenis request
       </Button>
 
-      <div className="mt-5 grid gap-5 border-b border-border pb-6 sm:grid-cols-[1fr_auto] sm:items-end">
+      <div className="mt-5 grid gap-5 border-b document-rule pb-7 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
-          <p className="text-sm font-medium text-primary">Jenis request</p>
-          <h1 className="mt-2 text-balance text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">{details.title}</h1>
+          <p className="document-kicker">Jenis request</p>
+          <h1 className="document-title mt-3 text-balance text-4xl sm:text-5xl">{details.title}</h1>
           <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">{details.description}</p>
         </div>
-        <p className="max-w-52 rounded-xl bg-muted px-3 py-2 text-sm leading-5 text-muted-foreground sm:text-right">
+        <p className="max-w-52 border-l border-accent bg-muted/60 px-3 py-2 text-sm leading-5 text-muted-foreground sm:text-right">
           Kolom bertanda <span className="font-semibold text-destructive">*</span> wajib diisi
         </p>
       </div>
 
-      <form noValidate onSubmit={submit} className="mt-6 grid gap-7 rounded-2xl border border-border bg-card p-4 sm:p-7">
+      <form noValidate onSubmit={submit} className="document-panel mt-7 grid gap-7 rounded-lg p-5 sm:p-8">
         {Object.values(errors).some(Boolean) ? (
           <div ref={errorSummaryRef} tabIndex={-1} role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 outline-none">
             <p className="font-medium text-destructive">Periksa kembali informasi yang diperlukan.</p>
@@ -151,7 +151,7 @@ export function RequestForm({ type, onBack, onSubmit }: RequestFormProps) {
         ) : null}
         {type === "bug" ? <BugFields values={values} errors={errors} onChange={updateValue} systems={systems} /> : null}
 
-        <div className="flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col-reverse gap-3 border-t document-rule pt-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-muted-foreground">Pastikan informasi dapat dipahami tanpa detail teknis.</p>
           <Button type="submit" size="lg" className="h-12 w-full px-5 sm:w-auto" disabled={isSubmitting}>
             {isSubmitting ? "Mengirim request..." : "Kirim request"} <SendIcon aria-hidden="true" />

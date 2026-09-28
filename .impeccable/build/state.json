@@ -1,0 +1,137 @@
+{
+  "tool": "build-phase",
+  "version": 2,
+  "startedAt": "2026-09-28T01:20:20.612Z",
+  "comp": ".impeccable/mocks/transmittal-desk-option-1.png",
+  "direction": "fc935105",
+  "breakpoint": "1586x992",
+  "artifact": "src/app/page.tsx",
+  "phase": "hero",
+  "phases": {
+    "comps": {
+      "status": "closed",
+      "openedAt": "2026-09-28T01:20:20.612Z",
+      "closedAt": "2026-09-28T01:28:08.183Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "3 comps, 1 approved",
+        "approved": ".impeccable/mocks/transmittal-desk-option-1.png",
+        "at": "2026-09-28T01:28:08.183Z"
+      },
+      "forced": null
+    },
+    "spec": {
+      "status": "closed",
+      "openedAt": "2026-09-28T01:28:08.260Z",
+      "closedAt": "2026-09-28T01:32:44.218Z",
+      "attempts": 2,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "23 regions, 1 plates, 11 text regions measured",
+        "at": "2026-09-28T01:32:44.218Z"
+      },
+      "forced": null
+    },
+    "plates": {
+      "status": "closed",
+      "openedAt": "2026-09-28T01:32:44.218Z",
+      "closedAt": "2026-09-28T01:35:07.989Z",
+      "attempts": 2,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "1/1 plates",
+        "at": "2026-09-28T01:35:07.989Z"
+      },
+      "forced": null
+    },
+    "hero": {
+      "status": "open",
+      "openedAt": "2026-09-28T01:35:07.989Z",
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "sections": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "motion": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "responsive": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "review": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    }
+  },
+  "finish": null,
+  "sessionId": "01a0e583-2920-7dc1-a0ca-5133a5ade5ac",
+  "plates": {
+    "blueprint": {
+      "id": "blueprint",
+      "file": "assets/plates/blueprint.png",
+      "status": "ok",
+      "assetHash": "64093499aaa2282f9f2c10fe5ecd6fe4cf13248f75915aa913211e97cd3c76fb",
+      "regionHash": "d634405ae0a27943d37bf2a5ad52743c6802a9305820f981669cb4d967a7c375",
+      "referenceHash": "b85ccd1ae6dfe503b6f77ec6713d692f357cdb9ae63b6e10b4b330781930202e",
+      "reference": {
+        "policy": "plate-reference-v2",
+        "excludedPixels": 78507,
+        "totalPixels": 314821,
+        "remainingPixels": 236314,
+        "excludedFraction": 0.24937027707808565,
+        "fullyExcluded": false,
+        "regions": [
+          {
+            "id": "footer-notes",
+            "kind": "text",
+            "cropPx": {
+              "x": 0,
+              "y": 298,
+              "w": 793,
+              "h": 99
+            },
+            "pixels": 78507
+          }
+        ],
+        "ignoredContainers": []
+      },
+      "compHash": "560c87fa24f583f27d242df8ffc392d32ec5bdb7de8e9d4e140bd0a22ba0b2b2",
+      "size": "1774x887",
+      "score": 0.5691
+    }
+  }
+}

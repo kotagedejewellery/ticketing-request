@@ -41,9 +41,10 @@ export function TrackingPanel({ trackingToken }: TrackingPanelProps) {
   }, [trackingToken]);
 
   return (
-    <section aria-labelledby="tracking-title" className="mx-auto w-full max-w-3xl">
+    <section aria-labelledby="tracking-title" className="mx-auto w-full max-w-4xl">
       <div className="max-w-2xl">
-        <h1 id="tracking-title" className="text-balance text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Progres request Anda.</h1>
+        <p className="document-kicker">Lacak transmittal</p>
+        <h1 id="tracking-title" className="document-title mt-3 text-balance text-4xl sm:text-5xl">Progres request Anda.</h1>
         <p className="mt-3 leading-7 text-muted-foreground">Berikut pembaruan terbaru dari tim engineer untuk request Anda.</p>
       </div>
 
@@ -57,18 +58,18 @@ export function TrackingPanel({ trackingToken }: TrackingPanelProps) {
 
 function TicketProgress({ ticket }: { ticket: PublicTicket }) {
   return (
-    <Card className="mt-6 border-primary/15 shadow-[0_16px_36px_oklch(0.28_0.055_258_/_0.08)]">
-      <CardHeader className="gap-4 border-b border-border sm:flex-row sm:items-start sm:justify-between">
+    <Card className="document-panel mt-8 rounded-lg">
+      <CardHeader className="gap-4 border-b document-rule sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="font-mono text-xs font-semibold tracking-[0.14em] text-muted-foreground">{ticket.id}</p>
-          <CardTitle className="mt-2 text-2xl">{ticket.title}</CardTitle>
+          <CardTitle className="document-title mt-2 text-3xl">{ticket.title}</CardTitle>
           <p className="mt-1 text-sm text-muted-foreground">{REQUEST_TYPE_LABELS[ticket.type]}</p>
         </div>
         <TicketStatusBadge status={ticket.status} />
       </CardHeader>
       <CardContent className="grid gap-6 pt-6">
-        <div className="rounded-lg border border-border bg-muted/50 p-4">
-          <p className="text-sm font-medium">Pembaruan dari tim</p>
+        <div className="border-l border-accent bg-muted/40 p-5">
+          <p className="document-kicker">Pembaruan dari tim</p>
           <p className="mt-2 leading-7 text-muted-foreground">{ticket.publicProgress}</p>
         </div>
         <div className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">

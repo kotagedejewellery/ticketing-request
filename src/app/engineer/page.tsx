@@ -5,6 +5,6 @@ import { getActiveSessionUser } from "@/lib/security/session";
 
 export default async function EngineerPage() {
   const user = await getActiveSessionUser();
-  if (!user) redirect("/masuk");
+  if (!user) redirect("/login");
   return <EngineerWorkspace user={user} />;
 }

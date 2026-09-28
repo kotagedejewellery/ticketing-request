@@ -1,10 +1,3 @@
----
-version: 1
-slug: "src-app-page-tsx"
-primary_target: "src/app/page.tsx"
-related_targets: ["src/components/requester/requester-shell.tsx","src/components/requester/request-workspace.tsx","src/components/requester/request-type-picker.tsx","src/components/requester/request-form.tsx","src/components/requester/tracking-panel.tsx","src/components/admin/engineer-workspace.tsx","src/components/admin/dashboard.tsx","src/components/admin/admin-management.tsx","src/components/auth/login-workspace.tsx","src/components/admin/ticket-detail-dialog.tsx"]
----
-
 ## Scope
 
 `src/app/page.tsx` and the shared requester, engineer, admin, and authentication components form one Indonesian internal service workspace. Mode: Operate. Product behavior, all form fields, requester-safe progress, authentication, and Google Sheets integration remain unchanged.

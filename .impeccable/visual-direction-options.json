@@ -1,0 +1,123 @@
+{
+  "title": "Pilih visual world baru",
+  "question": "Pilih arah visual untuk redesign total Internal Request Hub. Semua pilihan mempertahankan alur pengajuan, tracking, dashboard engineer, dan admin yang ada.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "The Transmittal Desk",
+      "kicker": "THE ROLL",
+      "lineage": "architectural transmittal sheets and drawing registers",
+      "thesis": "Setiap request terasa sebagai handoff kerja yang rapi, dapat ditelusuri, dan siap ditindaklanjuti.",
+      "palette": ["#F4F1EA", "#1D2B2B", "#B8833E", "#AABABD"],
+      "materials": ["uncoated paper", "hairline registrar rules", "brass service markers"],
+      "viewport": "Header tipis memberi orientasi; tiga jalur request tersusun sebagai register vertikal di kanan, sementara konteks dan langkah berikutnya terbaca kuat di kiri.",
+      "risk": "Sistem harus menjaga formalitas tetap hangat dan mudah dipahami bagi requester non-teknis.",
+      "raised": [
+        {"from": "Miura-fold work plan", "raise": "Perubahan status diterjemahkan menjadi progress strip yang saling terhubung, bukan kumpulan badge terpisah."},
+        {"from": "Crouwel construction grid", "raise": "Grid dan alignment diperlakukan sebagai alat orientasi yang ketat, terutama untuk dashboard dan tabel."},
+        {"from": "Teletext service", "raise": "Nomor tiket menjadi shortcut yang sangat cepat dibaca dan dicari pada semua mode kerja."}
+      ],
+      "comp": ".impeccable/mocks/decision/transmittal-desk.png"
+    },
+    {
+      "id": "model-pick",
+      "label": "The Concierge Register",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "a premium hotel concierge's daily register",
+      "thesis": "Pengajuan internal diperlakukan sebagai layanan yang personal, jelas, dan selesai sampai tuntas.",
+      "palette": ["#FBFAF7", "#18211E", "#C59650", "#DCE2DD"],
+      "materials": ["fine stationery", "deep green ink", "quiet brass details"],
+      "viewport": "Satu pertanyaan utama memandu requester, lalu tiga kebutuhan layanan disusun seperti entri register yang mudah dipilih.",
+      "risk": "Nuansa hospitality harus tetap tegas sebagai tool kerja, bukan tampilan marketing.",
+      "comp": ".impeccable/mocks/decision/concierge-register.png"
+    },
+    {
+      "id": "challenger-miura",
+      "label": "The Folded Work Plan",
+      "verdict": "competitive",
+      "lineage": "Miura-fold deployment sheet",
+      "thesis": "Request terbuka menjadi rencana kerja yang memperlihatkan hubungan antar-tahap secara nyata.",
+      "palette": ["#F8F7F2", "#252B2C", "#C39449", "#B7CAD0"],
+      "materials": ["folded field sheet", "warm crease lines", "pale-blue stage markers"],
+      "viewport": "Tiga jalur request membentuk bidang terlipat yang membuka ke detail form dan progres yang saling terkait.",
+      "case": "Sangat kuat untuk memvisualkan progres, tetapi lebih sulit dikenali sebagai service desk saat pertama dibuka.",
+      "risk": "Geometri berlebih dapat mengurangi keterbacaan pada data dashboard yang padat.",
+      "comp": ".impeccable/mocks/decision/folded-work-plan.png",
+      "hero": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-miura-orbit-sheet-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-miura-orbit-sheet.webp"
+    },
+    {
+      "id": "challenger-crouwel",
+      "label": "The Construction Register",
+      "verdict": "competitive",
+      "lineage": "Wim Crouwel gridded type specimen",
+      "thesis": "Kejelasan lahir dari grid yang terlihat: setiap tiket, filter, dan status punya posisi yang tegas.",
+      "palette": ["#FCFCF9", "#18252A", "#2B70C9", "#D9E2E6"],
+      "materials": ["visible construction grid", "precise grotesk", "one earned blue plane"],
+      "viewport": "Judul besar dan register request dibangun dari grid yang sama, dengan kontrol tersebar dalam ritme sel yang konsisten.",
+      "case": "Memenangkan disiplin informasi, tetapi kurang membawa rasa layanan dan handoff yang spesifik pada produk ini.",
+      "risk": "Jika grid terlalu dominan, layar berisiko terasa seperti poster alih-alih workspace.",
+      "comp": ".impeccable/mocks/decision/construction-register.png",
+      "hero": "https://impeccable.style/worlds/cards/crouwel-grid-specimen-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/crouwel-grid-specimen.webp"
+    },
+    {
+      "id": "challenger-teletext",
+      "label": "The Page Index",
+      "verdict": "declined",
+      "lineage": "broadcast teletext service",
+      "thesis": "Dashboard sebagai indeks status yang serba cepat dan bernomor.",
+      "palette": ["#101820", "#FFFFFF", "#19C3D1", "#F4D24D"],
+      "materials": ["bitmap grid", "broadcast color blocks"],
+      "viewport": "Tiket dan status tersusun dalam halaman bernomor yang langsung dapat dicari.",
+      "case": "Cepat dan eksplisit, namun gagal membawa kesan elegan-profesional yang diminta.",
+      "kept": "Pencarian nomor tiket yang eksplisit dan sangat terlihat.",
+      "risk": "Terbaca sebagai nostalgia, bukan service tool modern.",
+      "comp": ".impeccable/mocks/decision/page-index.png",
+      "hero": "https://impeccable.style/worlds/cards/broadcast-programming-teletext-service-hero.webp"
+    },
+    {
+      "id": "challenger-cracktro",
+      "label": "The Depth Queue",
+      "verdict": "declined",
+      "lineage": "cracktro title-screen queue",
+      "thesis": "Prioritas tiket dibaca dari kedalaman dan intensitas pada satu bidang gelap.",
+      "palette": ["#111413", "#E9E7DE", "#D49B47", "#757B78"],
+      "materials": ["emissive black", "bitmap baseline", "slow dust field"],
+      "viewport": "Antrean aktif muncul sebagai lapisan teks dengan satu fokus kerja di depan.",
+      "case": "Menawarkan fokus yang kuat, tetapi hierarki berbasis kedalaman mengorbankan affordance operasional yang lazim.",
+      "kept": "Satu fokus kerja yang dominan di setiap konteks.",
+      "risk": "Terlalu eksperimental untuk form dan tabel yang dipakai sehari-hari.",
+      "comp": ".impeccable/mocks/decision/depth-queue.png",
+      "hero": "https://impeccable.style/worlds/cards/operate-c-cracktro-scroller-queue-hero.webp"
+    },
+    {
+      "id": "challenger-botanical",
+      "label": "The Lifecycle Folio",
+      "verdict": "declined",
+      "lineage": "botanical seasonal folio",
+      "thesis": "Tahap tiket tersusun sebagai perkembangan yang tenang dan dapat dibandingkan.",
+      "palette": ["#F4F0E6", "#34382F", "#9E4137", "#ABB597"],
+      "materials": ["registered plates", "fine sepia rules", "stage labels"],
+      "viewport": "Status tampil sebagai urutan tahap yang sejajar dan mudah dibandingkan.",
+      "case": "Punya ritme progres yang baik, tetapi metafora biologis tidak cukup natural untuk request sistem.",
+      "kept": "Perbandingan tahapan yang stabil dan tidak mengandalkan warna saja.",
+      "risk": "Terlalu editorial untuk pekerjaan yang harus cepat dieksekusi.",
+      "comp": ".impeccable/mocks/decision/lifecycle-folio.png",
+      "hero": "https://impeccable.style/worlds/cards/editorial-sequence-montage-botanical-folio-season-hero.webp"
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "comp", "toggle": true},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "Service desk modern yang familier, dieksekusi sangat rapi.",
+    "palette": ["#FFFFFF", "#111827", "#2563EB"],
+    "materials": ["clean grid", "familiar dashboard controls"],
+    "viewport": "Header, kartu ringkasan, dan tabel yang pengunjung langsung kenal.",
+    "risk": "Profesional, tetapi tidak memberi identitas yang khas.",
+    "comp": ".impeccable/mocks/decision/category-standard.png"
+  },
+  "steer": true
+}

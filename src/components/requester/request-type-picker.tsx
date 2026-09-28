@@ -1,4 +1,6 @@
-import { ArrowUpRightIcon, BugIcon, PlusIcon, WrenchIcon } from "lucide-react";
+"use client";
+
+import { ArrowRightIcon, BugIcon, FilePlus2Icon, WrenchIcon } from "lucide-react";
 import { useState } from "react";
 
 import type { RequestInput } from "@/lib/domain/tickets";
@@ -8,27 +10,9 @@ type RequestTypePickerProps = {
 };
 
 const requestTypes = [
-  {
-    type: "new-system" as const,
-    label: "Request Sistem Baru",
-    description: "Sampaikan kebutuhan baru yang belum memiliki sistem pendukung.",
-    icon: PlusIcon,
-    marker: "01",
-  },
-  {
-    type: "enhancement" as const,
-    label: "Pengembangan Sistem",
-    description: "Tambahkan atau ubah fungsi pada sistem yang sudah digunakan.",
-    icon: WrenchIcon,
-    marker: "02",
-  },
-  {
-    type: "bug" as const,
-    label: "Error / Bug / Debugging",
-    description: "Laporkan kendala sistem dengan bahasa sederhana.",
-    icon: BugIcon,
-    marker: "03",
-  },
+  { type: "new-system" as const, label: "Sistem Baru", description: "Ajukan pembuatan sistem baru untuk mendukung kebutuhan kerja Anda.", icon: FilePlus2Icon },
+  { type: "enhancement" as const, label: "Pengembangan Sistem", description: "Ajukan peningkatan atau penyesuaian pada sistem yang sudah digunakan.", icon: WrenchIcon },
+  { type: "bug" as const, label: "Lapor Bug", description: "Laporkan kendala atau bug agar dapat segera ditindaklanjuti.", icon: BugIcon },
 ];
 
 export function RequestTypePicker({ onSelect }: RequestTypePickerProps) {
@@ -40,47 +24,33 @@ export function RequestTypePicker({ onSelect }: RequestTypePickerProps) {
   };
 
   return (
-    <section aria-labelledby="request-type-title" className="mx-auto w-full max-w-6xl">
-      <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
-        <div className="max-w-xl lg:col-span-5 lg:pt-4">
-          <p className="text-sm font-medium text-primary">Pengajuan baru</p>
-          <h1 id="request-type-title" className="mt-3 text-balance text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">
-            Satu request, jalur yang jelas.
-          </h1>
-          <p className="mt-5 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
-            Pilih kebutuhan Anda. Form berikutnya hanya menampilkan informasi yang benar-benar diperlukan.
-          </p>
-          <p className="mt-8 border-t border-border pt-4 text-sm leading-6 text-muted-foreground">
-            Tidak perlu istilah teknis. Tim engineer akan melakukan klasifikasi setelah request diterima.
-          </p>
+    <section aria-labelledby="request-type-title" className="relative isolate overflow-hidden border-y document-rule py-7 sm:py-10 lg:py-14">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,0.94fr)_minmax(32rem,1.06fr)] lg:gap-0">
+        <div className="px-5 pb-8 sm:px-8 lg:border-r document-rule lg:px-10 lg:pb-0">
+          <div className="max-w-xl pt-2 sm:pt-7">
+            <h1 id="request-type-title" className="document-title max-w-lg text-balance text-[clamp(3.15rem,6.4vw,6rem)] leading-[0.91] text-foreground">Bagaimana kami dapat membantu?</h1>
+            <p className="mt-7 max-w-md text-lg leading-8 text-muted-foreground">Pilih kebutuhan Anda. Form berikutnya hanya meminta informasi yang benar-benar diperlukan oleh tim kami.</p>
+          </div>
         </div>
 
-        <div className="border-y border-border lg:col-span-7 lg:border-t">
-        {requestTypes.map(({ type, label, description, icon: Icon, marker }) => {
-          const isSelected = selectedType === type;
-
-          return <button
-            key={type}
-            type="button"
-            onClick={() => selectRequestType(type)}
-            aria-pressed={isSelected}
-            disabled={Boolean(selectedType)}
-            className={`group relative grid w-full grid-cols-[auto_auto_1fr_auto] items-start gap-3 border-b border-border px-1 py-5 text-left transition-colors duration-200 last:border-b-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none sm:gap-5 sm:px-4 sm:py-6 ${isSelected ? "bg-secondary/80" : "hover:bg-secondary/55"}`}
-          >
-            <span aria-hidden="true" className={`absolute inset-y-4 left-0 w-px bg-primary transition-transform duration-200 ${isSelected ? "scale-y-100" : "scale-y-0"}`} />
-            <span className="pt-1 font-mono text-xs font-medium tabular-nums text-muted-foreground">{marker}</span>
-            <span className={`flex size-11 items-center justify-center rounded-xl transition-colors ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-primary group-hover:bg-primary group-hover:text-primary-foreground"}`}>
-              <Icon aria-hidden="true" className="size-5" />
-            </span>
-            <div className="min-w-0 pt-0.5">
-              <h2 className="text-lg font-semibold tracking-tight sm:text-xl">{label}</h2>
-              <p className="mt-1.5 max-w-md text-sm leading-6 text-muted-foreground">{description}</p>
-            </div>
-            <span className={`mt-1.5 flex size-9 items-center justify-center rounded-full border transition-all ${isSelected ? "translate-x-0.5 border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground"}`}>
-              <ArrowUpRightIcon aria-hidden="true" className="size-4" />
-            </span>
-          </button>
-        })}
+        <div className="px-5 sm:px-8 lg:px-10">
+          <div className="flex items-center gap-4 border-b document-rule py-5 sm:py-7">
+            <p className="document-kicker">Pilih jenis permintaan</p>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <div>
+            {requestTypes.map(({ type, label, description, icon: Icon }) => {
+              const isSelected = selectedType === type;
+              return (
+                <button key={type} type="button" onClick={() => selectRequestType(type)} aria-pressed={isSelected} disabled={Boolean(selectedType)} className={`group grid w-full grid-cols-[auto_1fr_auto] items-center gap-4 border-b document-rule py-7 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:pointer-events-none sm:gap-6 sm:py-9 ${isSelected ? "bg-secondary/55" : "hover:bg-secondary/35"}`}>
+                  <span className="flex size-12 items-center justify-center rounded-full bg-accent/85 text-primary transition-colors sm:size-14"><Icon aria-hidden="true" className="size-5 sm:size-6" /></span>
+                  <span className="min-w-0"><span className="document-title block text-[1.7rem] leading-none sm:text-[2.15rem]">{label}</span><span className="mt-2 block max-w-md text-sm leading-6 text-muted-foreground sm:text-base">{description}</span></span>
+                  <span className={`flex size-10 items-center justify-center rounded-full border border-border text-primary transition-all ${isSelected ? "translate-x-1 bg-primary text-primary-foreground" : "group-hover:translate-x-1 group-hover:border-primary"}`}><ArrowRightIcon aria-hidden="true" className="size-4" /></span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="pb-6 pt-5 text-sm leading-6 text-muted-foreground">Tidak perlu menggunakan istilah teknis. Tim engineer akan melakukan klasifikasi setelah request diterima.</p>
         </div>
       </div>
     </section>

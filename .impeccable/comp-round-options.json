@@ -1,0 +1,36 @@
+{
+  "title": "Pilih komposisi Transmittal Desk",
+  "question": "Pilih komposisi yang akan diterjemahkan ke UI responsif. Semuanya memakai visual world yang sama.",
+  "options": [
+    {
+      "id": "option-1",
+      "label": "Split handoff",
+      "thesis": "Pernyataan kebutuhan besar di kiri, tiga jalur request presisi di kanan.",
+      "palette": ["#F4F1EA", "#1D2B2B", "#B8833E", "#AABABD"],
+      "materials": ["uncoated paper", "registrar rules"],
+      "viewport": "Dua kolom yang tenang; fokus awal pada memilih jenis request.",
+      "risk": "Tracking baru terasa setelah requester bergeser dari area utama.",
+      "comp": ".impeccable/mocks/transmittal-desk-option-1.png"
+    },
+    {
+      "id": "option-2",
+      "label": "Service register",
+      "thesis": "Pilihan request, cara kerja, dan pelacakan berada dalam satu register terpadu.",
+      "palette": ["#F4F1EA", "#1D2B2B", "#B8833E", "#AABABD"],
+      "materials": ["uncoated paper", "document annotations"],
+      "viewport": "Pernyataan kebutuhan besar membuka register dua kolom: pilihan di kiri, proses dan tracking di kanan.",
+      "risk": "Memerlukan disiplin responsif agar informasi proses tidak terasa padat di layar kecil.",
+      "comp": ".impeccable/mocks/transmittal-desk-option-2.png"
+    },
+    {
+      "id": "option-3",
+      "label": "Status-led desk",
+      "thesis": "Requester memilih kebutuhan sambil langsung memahami status dan cara melacak hasilnya.",
+      "palette": ["#F4F1EA", "#1D2B2B", "#B8833E", "#AABABD"],
+      "materials": ["uncoated paper", "brass service markers"],
+      "viewport": "Tiga zona: navigasi tipis, register request dominan, lalu ledger status requester-safe di kanan.",
+      "risk": "Area kanan perlu dipadatkan dengan hati-hati pada ukuran tablet.",
+      "comp": ".impeccable/mocks/transmittal-desk-option-3.png"
+    }
+  ]
+}
