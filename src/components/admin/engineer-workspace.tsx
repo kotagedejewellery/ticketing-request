@@ -68,7 +68,7 @@ export function EngineerWorkspace({ user, children }: EngineerWorkspaceProps) {
 
         <div className="min-w-0">
         <header className="border-b document-rule bg-background">
-          <div className="mx-auto flex max-w-[100rem] items-center justify-between gap-4 px-5 py-3 sm:px-8 lg:px-10">
+          <div className="flex items-center justify-between gap-4 px-5 py-3 sm:px-8 lg:px-10">
             <Link href="/engineer" className="min-w-0" aria-label="Internal Request Hub, ringkasan">
               <span className="document-title block truncate text-xl leading-none text-foreground sm:text-2xl">Internal Request Hub</span>
             </Link>
@@ -83,7 +83,7 @@ export function EngineerWorkspace({ user, children }: EngineerWorkspaceProps) {
             </div>
           </nav>
         </header>
-        <main id="main-content" className="mx-auto w-full max-w-[100rem] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">{children}</main>
+        <main id="main-content" className="engineer-content w-full px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">{children}</main>
         </div>
       </div>
     </div>

@@ -174,6 +174,10 @@
     container-type: inline-size;
   }
 
+  .engineer-content {
+    container-type: inline-size;
+  }
+
   .engineer-rail {
     display: none;
   }
@@ -191,6 +195,40 @@
     .engineer-mobile-navigation,
     .engineer-mobile-logout {
       display: none;
+    }
+  }
+
+  @container (min-width: 58rem) {
+    .engineer-filter-grid {
+      grid-template-columns: minmax(15rem, 1.5fr) repeat(3, minmax(10rem, 1fr));
+    }
+
+    .engineer-detail-grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.9fr);
+      grid-template-areas:
+        "data update"
+        "history history";
+    }
+
+    .engineer-request-data {
+      grid-area: data;
+    }
+
+    .engineer-detail-update {
+      grid-area: update;
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .engineer-ticket-history {
+      grid-area: history;
+    }
+  }
+
+  @container (min-width: 75rem) {
+    .engineer-detail-grid {
+      grid-template-columns: minmax(0, 1.45fr) minmax(20rem, 0.85fr) minmax(19rem, 0.8fr);
+      grid-template-areas: "data update history";
     }
   }
 }

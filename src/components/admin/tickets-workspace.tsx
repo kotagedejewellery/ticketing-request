@@ -41,7 +41,7 @@ export function TicketsWorkspace() {
   return <section aria-labelledby="tickets-title">
     <div className="max-w-2xl"><h1 id="tickets-title" className="document-title text-balance text-4xl sm:text-5xl">Tiket masuk.</h1><p className="mt-3 leading-7 text-muted-foreground">Cari, saring, dan buka request yang memerlukan tindak lanjut.</p></div>
 
-    <div className="mt-10 grid gap-3 border-y document-rule py-5 lg:grid-cols-[minmax(15rem,1.5fr)_repeat(3,minmax(10rem,1fr))]">
+    <div className="engineer-filter-grid mt-10 grid gap-3 border-y document-rule py-5">
       <label className="grid gap-2 text-sm font-medium"><span>Cari tiket</span><span className="relative"><SearchIcon aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nomor, request, requester" className="h-12 w-full rounded-xl border border-input bg-background pl-10 pr-3 text-base font-normal outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50" /></span></label>
       <FilterSelect label="Jenis request" value={typeFilter} onChange={setTypeFilter} options={[["all", "Semua jenis"], ...Object.entries(REQUEST_TYPE_LABELS)]} />
       <FilterSelect label="Status" value={statusFilter} onChange={setStatusFilter} options={[["all", "Semua status"], ...TICKET_STATUSES.map((status) => [status, status])]} />

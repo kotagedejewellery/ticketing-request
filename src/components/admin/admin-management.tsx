@@ -167,7 +167,7 @@ export function AdminManagement({ user, section }: { user: EngineerSession; sect
         {successMessage ? <p role="status" className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 p-3 text-sm text-success-foreground"><CheckCircle2Icon aria-hidden="true" className="size-4" />{successMessage}</p> : null}
       </div>
       {isLoading ? <p role="status" className="mt-8 flex items-center gap-2 text-sm text-muted-foreground"><LoaderCircleIcon aria-hidden="true" className="size-4 animate-spin" /> Memuat pengelolaan internal...</p> : <div className="mt-8" aria-busy={Boolean(pendingAction)}>
-        {section === "systems" ? <section className="max-w-3xl border-y document-rule py-6" aria-labelledby="system-management-title">
+        {section === "systems" ? <section className="border-y document-rule py-6" aria-labelledby="system-management-title">
           <div className="flex items-center gap-2"><WrenchIcon aria-hidden="true" className="size-4" /><h3 id="system-management-title" className="font-semibold">Sistem pada form</h3></div>
           <form onSubmit={addSystem} className="mt-4 flex flex-col gap-3 sm:flex-row">
             <Label htmlFor="system-name" className="sr-only">Nama sistem</Label>
@@ -179,7 +179,7 @@ export function AdminManagement({ user, section }: { user: EngineerSession; sect
           </div>
         </section> : null}
 
-        {section === "users" ? <section className="max-w-4xl border-y document-rule py-6" aria-labelledby="user-management-title">
+        {section === "users" ? <section className="border-y document-rule py-6" aria-labelledby="user-management-title">
           <div className="flex items-center gap-2"><UsersRoundIcon aria-hidden="true" className="size-4" /><h3 id="user-management-title" className="font-semibold">User engineer</h3></div>
           <form onSubmit={addUser} className="mt-4 grid gap-3 sm:grid-cols-2">
             <Field id="user-name" name="name" label="Nama" disabled={isBusy} />

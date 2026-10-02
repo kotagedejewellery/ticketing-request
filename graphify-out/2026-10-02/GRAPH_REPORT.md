@@ -1,7 +1,7 @@
 # Graph Report - ticketing-request  (2026-10-02)
 
 ## Corpus Check
-- 136 files · ~611,931 words
+- 136 files · ~611,940 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 10 file(s) not represented in the graph (top: .toml 4, (none) 2, .log 2)
 

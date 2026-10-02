@@ -882,9 +882,9 @@
     "semantic_hash": ""
   },
   "src/components/admin/ticket-detail-workspace.tsx": {
-    "mtime": 1790933566.1333008,
-    "seen": 1790933611.8152027,
-    "ast_hash": "4308546cf4e310472d98ca969feec1dd",
+    "mtime": 1790933329.0456114,
+    "seen": 1790933459.8372169,
+    "ast_hash": "cce0a0ccd038caecb17153a340dce2c7",
     "semantic_hash": ""
   },
   "src/components/admin/tickets-workspace.tsx": {

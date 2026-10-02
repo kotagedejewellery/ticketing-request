@@ -7242,7 +7242,7 @@
       "file_type": "code",
       "norm_label": "inforow()",
       "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L96"
+      "source_location": "L99"
     },
     {
       "id": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
@@ -7266,7 +7266,7 @@
       "file_type": "code",
       "norm_label": "ticketinformation()",
       "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L84"
+      "source_location": "L87"
     },
     {
       "id": "src_components_auth_engineer_login_form_engineerloginform",
@@ -33750,54 +33750,6 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L77",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
-      "target": "src_components_ui_button_button",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L78",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
-      "target": "src_components_ui_input_input",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L78",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
-      "target": "src_components_ui_label_label",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L78",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
-      "target": "src_components_ui_textarea_textarea",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/components/admin/ticket-detail-workspace.tsx",
       "source_location": "L78",
       "weight": 1.0
     },
@@ -33814,6 +33766,54 @@
       "weight": 1.0
     },
     {
+      "source": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
+      "target": "src_components_ui_button_button",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/admin/ticket-detail-workspace.tsx",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
+      "target": "src_components_ui_input_input",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/admin/ticket-detail-workspace.tsx",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
+      "target": "src_components_ui_label_label",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/admin/ticket-detail-workspace.tsx",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_admin_ticket_detail_workspace_ticketdetailworkspace",
+      "target": "src_components_ui_textarea_textarea",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/admin/ticket-detail-workspace.tsx",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_admin_ticket_detail_workspace_ticketinformation",
       "target": "src_lib_domain_tickets_getsafeexternalurl",
       "relation": "calls",
@@ -33822,7 +33822,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L85",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
@@ -33834,7 +33834,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L93",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -33846,7 +33846,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L93",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -49289,7 +49289,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L84",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -49300,7 +49300,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/admin/ticket-detail-workspace.tsx",
-      "source_location": "L96",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
